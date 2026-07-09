@@ -1,0 +1,2070 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Air Cloud X APN Network - Autoscale Demo</title>
+<style>
+  :root {
+    --bg: #f4f6f7;
+    --paper: #ffffff;
+    --ink: #111315;
+    --ink-2: #535b63;
+    --muted: #8e98a2;
+    --line: #dde4ea;
+    --line-2: #cdd6de;
+    --apn: #0a918d;
+    --apn-2: #49c5bd;
+    --blue: #1b6fff;
+    --red: #e85050;
+    --amber: #f2a12c;
+    --green: #16a36e;
+    --aws: #232f3e;
+    --soft: #f8fafb;
+    --shadow: 0 28px 70px rgba(21, 30, 38, .14);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    letter-spacing: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    padding: 18px;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  .app {
+    width: min(1500px, 100%);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .topbar {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 260px;
+  }
+
+  .brand strong {
+    font-size: 20px;
+    font-weight: 900;
+    font-style: italic;
+  }
+
+  .brand span {
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 750;
+    white-space: nowrap;
+  }
+
+  .tabs {
+    display: inline-flex;
+    height: 38px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .74);
+  }
+
+  .tab-btn,
+  .chip,
+  .icon-btn,
+  .primary {
+    border: 0;
+    cursor: pointer;
+    font-weight: 800;
+    transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+  }
+
+  .tab-btn {
+    height: 30px;
+    padding: 0 13px;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .tab-btn.active {
+    background: var(--ink);
+    color: white;
+  }
+
+  .chip {
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--ink-2);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .chip.active {
+    color: var(--apn);
+    border-color: rgba(10, 145, 141, .35);
+    background: #edf9f7;
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .icon-btn:hover,
+  .chip:hover {
+    border-color: rgba(10, 145, 141, .35);
+    background: #edf9f7;
+    color: var(--apn);
+  }
+
+  .icon-btn:active,
+  .chip:active,
+  .primary:active {
+    transform: scale(.98);
+  }
+
+  .deck {
+    position: relative;
+    width: 100%;
+    min-height: calc(100vh - 86px);
+    overflow: clip;
+    border-radius: 12px;
+    background:
+      radial-gradient(circle at 86% 12%, rgba(10, 145, 141, .12), transparent 26%),
+      linear-gradient(180deg, #fff 0%, #fbfcfd 58%, #f1f5f6 100%);
+    box-shadow: var(--shadow);
+  }
+
+  .wave {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    bottom: -6%;
+    height: 33%;
+    opacity: .34;
+    pointer-events: none;
+  }
+
+  .wave.top {
+    top: -8%;
+    bottom: auto;
+    transform: rotate(180deg);
+    opacity: .22;
+  }
+
+  .wave path {
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .wave .wide {
+    stroke: rgba(60, 82, 92, .14);
+    stroke-width: 34;
+  }
+
+  .wave .thin {
+    stroke: rgba(10, 145, 141, .22);
+    stroke-width: 18;
+  }
+
+  .pages {
+    position: relative;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .page {
+    width: 100%;
+    min-height: calc(100vh - 86px);
+    padding: 56px 58px 42px;
+  }
+
+  .pages[data-page="onboarding"] .demo-page,
+  .pages[data-page="demo"] .onboarding {
+    display: none;
+  }
+
+  .onboarding {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 38px;
+  }
+
+  .hero-title {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    padding-top: 18px;
+  }
+
+  .eyebrow {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .headline {
+    max-width: 920px;
+    margin: 0;
+    font-size: clamp(36px, 5vw, 74px);
+    line-height: 1.04;
+    font-weight: 850;
+  }
+
+  .headline span {
+    color: var(--apn);
+  }
+
+  .subhead {
+    max-width: 760px;
+    color: var(--ink-2);
+    font-size: 24px;
+    line-height: 1.42;
+    font-weight: 620;
+  }
+
+  .onboarding-body {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .compare-panel,
+  .brief-panel,
+  .live-card,
+  .cost-panel,
+  .network-panel {
+    border: 1px solid rgba(221, 228, 234, .95);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .78);
+    backdrop-filter: blur(16px);
+  }
+
+  .compare-panel {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .compare-panel h2,
+  .brief-panel h2,
+  .live-card h2,
+  .cost-panel h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 850;
+  }
+
+  .panel-head {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .panel-head small {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .mini-topology {
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .center-stack {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    gap: 8px;
+    justify-items: center;
+  }
+
+  .dc {
+    width: 132px;
+    height: 96px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 14px 26px rgba(23, 32, 42, .08);
+    font-weight: 900;
+  }
+
+  .edge-ring {
+    position: absolute;
+    inset: 28px;
+  }
+
+  .edge-node {
+    position: absolute;
+    width: 84px;
+    height: 58px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(10, 145, 141, .3);
+    border-radius: 8px;
+    background: #f1fbfa;
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .edge-node:nth-child(1) { left: 4%; top: 13%; }
+  .edge-node:nth-child(2) { right: 3%; top: 16%; }
+  .edge-node:nth-child(3) { left: 9%; bottom: 13%; }
+  .edge-node:nth-child(4) { right: 8%; bottom: 12%; }
+  .edge-node:nth-child(5) { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+
+  .workload-cloud {
+    position: absolute;
+    inset: 22px;
+    pointer-events: none;
+  }
+
+  .mini-workload {
+    position: absolute;
+    width: 96px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink-2);
+    font-size: 11px;
+    font-weight: 850;
+    box-shadow: 0 8px 18px rgba(25, 34, 42, .07);
+  }
+
+  .mini-workload.hot {
+    color: var(--red);
+    border-color: rgba(232, 80, 80, .26);
+    background: #fff7f7;
+  }
+
+  .compare-foot {
+    padding: 15px 18px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 14px;
+    line-height: 1.48;
+    font-weight: 650;
+  }
+
+  .brief-panel {
+    padding: 20px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 16px;
+  }
+
+  .brief-copy {
+    color: var(--ink-2);
+    font-size: 17px;
+    line-height: 1.62;
+    font-weight: 590;
+  }
+
+  .show-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .show-item {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 11px;
+    align-items: start;
+    padding: 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .show-item b {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #edf9f7;
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .show-item strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 850;
+  }
+
+  .show-item span {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.42;
+    font-weight: 680;
+  }
+
+  .primary {
+    height: 50px;
+    width: 100%;
+    border-radius: 8px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 16px;
+  }
+
+  .primary:hover {
+    background: #263039;
+  }
+
+  .demo-page {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .demo-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: end;
+  }
+
+  .demo-title h1 {
+    margin: 0;
+    font-size: clamp(32px, 3.8vw, 58px);
+    line-height: 1.04;
+    font-weight: 880;
+  }
+
+  .demo-title p {
+    margin: 12px 0 0;
+    color: var(--ink-2);
+    font-size: 18px;
+    line-height: 1.45;
+    font-weight: 620;
+  }
+
+  .state-card {
+    width: 310px;
+    padding: 17px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255,255,255,.82);
+  }
+
+  .state-card small {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 850;
+  }
+
+  .state-card strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 24px;
+    line-height: 1.14;
+  }
+
+  .state-card span {
+    display: block;
+    margin-top: 8px;
+    color: var(--ink-2);
+    font-size: 14px;
+    line-height: 1.45;
+    font-weight: 620;
+  }
+
+  .live-grid {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 370px;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .network-panel {
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 58px auto 88px auto;
+  }
+
+  .network-scene {
+    position: relative;
+    overflow: clip;
+    min-height: 610px;
+    display: grid;
+    grid-template-columns: minmax(420px, 1fr) 160px;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 16px 24px;
+    align-items: stretch;
+    padding: 22px;
+    background:
+      linear-gradient(90deg, rgba(27,111,255,.04), transparent 34%, rgba(10,145,141,.06)),
+      #fff;
+  }
+
+  .network-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .network-lines path {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-dasharray: 8 12;
+    stroke-linecap: round;
+    animation: dash 1.2s linear infinite;
+  }
+
+  .network-lines .incoming { stroke: rgba(27, 111, 255, .32); }
+  .network-lines .distributed { stroke: rgba(10, 145, 141, .52); }
+  .network-lines .overflow { stroke: rgba(232, 80, 80, .35); }
+
+  @keyframes dash {
+    to { stroke-dashoffset: -42; }
+  }
+
+  .ingress,
+  .scheduler {
+    position: relative;
+    z-index: 2;
+  }
+
+  .ingress {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    text-align: left;
+    justify-self: stretch;
+  }
+
+  .scheduler {
+    grid-column: 2;
+    grid-row: 1;
+    width: 150px;
+    text-align: center;
+    justify-self: center;
+    align-self: center;
+  }
+
+  .hub {
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 10px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(10, 145, 141, .3);
+    border-radius: 50%;
+    background: linear-gradient(180deg, #fff, #effbfa);
+    color: var(--apn);
+    box-shadow: 0 16px 36px rgba(15, 32, 38, .08);
+  }
+
+  .hub svg {
+    width: 42px;
+    height: 42px;
+  }
+
+  .ingress .hub {
+    color: var(--blue);
+    border-color: rgba(27, 111, 255, .24);
+    background: #fff;
+  }
+
+  .device-panel {
+    width: 100%;
+    min-height: 100%;
+    padding: 16px;
+    border: 1px solid rgba(27, 111, 255, .18);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .82);
+    box-shadow: 0 16px 34px rgba(24, 39, 52, .08);
+  }
+
+  .device-panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .device-panel-head span {
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .device-panel-head b {
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .traffic-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .traffic-btn {
+    height: 42px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .traffic-btn.up {
+    color: var(--apn);
+    background: #effbfa;
+    border-color: rgba(10,145,141,.28);
+  }
+
+  .traffic-btn.down {
+    color: var(--ink-2);
+    background: #f8fafb;
+  }
+
+  .device-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .device-card {
+    min-width: 0;
+    height: 138px;
+    display: grid;
+    grid-template-rows: 25px minmax(0, 1fr);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(205, 214, 222, .95);
+    border-radius: 8px;
+    background: #f8fafb;
+    color: var(--muted);
+    transition: background .22s ease, border-color .22s ease, color .22s ease, transform .22s ease;
+  }
+
+  .device-card.idle {
+    opacity: .48;
+  }
+
+  .device-card.active {
+    color: var(--blue);
+    border-color: rgba(27, 111, 255, .32);
+    background: #fff;
+    box-shadow: 0 9px 20px rgba(24, 39, 52, .06);
+  }
+
+  .device-card.hot {
+    color: var(--apn);
+    border-color: rgba(10, 145, 141, .32);
+    background: #fff;
+    transform: translateY(-1px);
+  }
+
+  .device-card.expanded {
+    border-color: rgba(10, 145, 141, .36);
+    box-shadow: inset 0 0 0 1px rgba(10,145,141,.08), 0 8px 18px rgba(20,40,50,.06);
+  }
+
+  .pc-titlebar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 7px;
+    align-items: center;
+    padding: 0 9px;
+    border-bottom: 1px solid var(--line);
+    background: #f4f7f9;
+  }
+
+  .pc-dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .pc-dots i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #c7d1d9;
+  }
+
+  .device-card.active .pc-dots i:nth-child(1),
+  .device-card.hot .pc-dots i:nth-child(1) {
+    background: var(--red);
+  }
+
+  .device-card.active .pc-dots i:nth-child(2),
+  .device-card.hot .pc-dots i:nth-child(2) {
+    background: var(--amber);
+  }
+
+  .device-card.active .pc-dots i:nth-child(3),
+  .device-card.hot .pc-dots i:nth-child(3) {
+    background: var(--green);
+  }
+
+  .pc-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .pc-state {
+    color: currentColor;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .pc-body {
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 7px;
+    padding: 10px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,251,.95)),
+      repeating-linear-gradient(0deg, transparent, transparent 13px, rgba(205,214,222,.18) 14px);
+  }
+
+  .agent-prompt {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 850;
+  }
+
+  .agent-prompt i {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 4px rgba(10,145,141,.1);
+  }
+
+  .agent-prompt span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .agent-lines {
+    min-height: 0;
+    display: grid;
+    gap: 4px;
+    align-content: start;
+    color: var(--ink-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 850;
+  }
+
+  .agent-lines span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .agent-route {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .device-load {
+    height: 5px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e8eef2;
+  }
+
+  .device-load i {
+    display: block;
+    height: 100%;
+    width: var(--device-load);
+    border-radius: inherit;
+    background: currentColor;
+    opacity: .85;
+  }
+
+  .chat-stream { display: none; }
+
+  .chat-msg {
+    max-width: 92%;
+    padding: 9px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 750;
+  }
+
+  .chat-msg.user {
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid rgba(27,111,255,.18);
+    color: var(--ink);
+  }
+
+  .chat-msg.bot {
+    align-self: flex-end;
+    background: #effbfa;
+    border: 1px solid rgba(10,145,141,.24);
+    color: #08716e;
+  }
+
+  .chat-msg.workload {
+    align-self: stretch;
+    max-width: none;
+    display: grid;
+    grid-template-columns: 116px minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+
+  .chat-msg.workload strong {
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .chat-msg.workload span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workload-state {
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .chat-msg small {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .node-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 900;
+  }
+
+  .node-sub {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 850;
+  }
+
+  .load-panel {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .9);
+  }
+
+  .load-panel small,
+  .cost-panel small,
+  .mini-metric small {
+    display: block;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+
+  .load-value {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .load-value strong {
+    font-family: var(--mono);
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  .load-value span {
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .bar {
+    height: 7px;
+    margin-top: 12px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e8eef2;
+  }
+
+  .bar i {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--apn), var(--blue), var(--red));
+    transition: width .25s ease;
+  }
+
+  .live-foot {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line);
+  }
+
+  .mini-metric {
+    padding: 13px 16px;
+    border-right: 1px solid var(--line);
+  }
+
+  .mini-metric:last-child {
+    border-right: 0;
+  }
+
+  .mini-metric strong {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 21px;
+    line-height: 1;
+  }
+
+  .node-status {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    padding: 14px 16px 16px;
+    border-top: 1px solid var(--line);
+    background: #fbfcfd;
+  }
+
+  .node-status-card {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .node-face {
+    height: 58px;
+    border: 1px solid #cfd9e0;
+    border-radius: 7px;
+    background: linear-gradient(180deg, #f9fbfc, #e9eef2);
+    box-shadow: inset 0 -8px 16px rgba(24, 36, 48, .06);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 7px 6px 6px;
+  }
+
+  .node-leds {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .node-leds i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #b7c2cb;
+  }
+
+  .node-leds i.on {
+    background: var(--apn);
+    box-shadow: 0 0 0 3px rgba(10, 145, 141, .12);
+  }
+
+  .node-leds i.warn {
+    background: var(--amber);
+    box-shadow: 0 0 0 3px rgba(242, 161, 44, .14);
+  }
+
+  .node-ports {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px;
+  }
+
+  .node-ports i {
+    height: 5px;
+    border-radius: 2px;
+    background: #9aa6af;
+    opacity: .45;
+  }
+
+  .node-status-card.active .node-ports i:nth-child(-n+3),
+  .node-status-card.warming .node-ports i:nth-child(-n+2) {
+    background: var(--apn);
+    opacity: .9;
+  }
+
+  .node-copy {
+    min-width: 0;
+  }
+
+  .node-copy strong {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .node-copy span {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .node-meter {
+    height: 6px;
+    margin-top: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e8eef2;
+  }
+
+  .node-meter i {
+    display: block;
+    width: var(--load);
+    height: 100%;
+    border-radius: inherit;
+    background: #aeb9c2;
+  }
+
+  .node-status-card.active .node-meter i {
+    background: var(--apn);
+  }
+
+  .node-status-card.warming .node-meter i {
+    background: var(--amber);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .status-badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .node-status-card.active {
+    border-color: rgba(10, 145, 141, .34);
+    background: #f1fbfa;
+  }
+
+  .node-status-card.active .node-face {
+    border-color: rgba(10, 145, 141, .36);
+    background: linear-gradient(180deg, #f7fffe, #dff3f1);
+  }
+
+  .node-status-card.active .status-badge {
+    color: var(--apn);
+  }
+
+  .node-status-card.active .status-badge::before {
+    background: var(--apn);
+    box-shadow: 0 0 0 4px rgba(10, 145, 141, .12);
+  }
+
+  .node-status-card.warming {
+    border-color: rgba(242, 161, 44, .4);
+    background: #fff8ec;
+  }
+
+  .node-status-card.warming .node-face {
+    border-color: rgba(242, 161, 44, .46);
+    background: linear-gradient(180deg, #fffdfa, #fff0d7);
+  }
+
+  .node-status-card.warming .status-badge {
+    color: #b66c05;
+  }
+
+  .node-status-card.warming .status-badge::before {
+    background: var(--amber);
+    box-shadow: 0 0 0 4px rgba(242, 161, 44, .14);
+  }
+
+  .cost-panel {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: 58px auto auto minmax(0, 1fr);
+    overflow: hidden;
+  }
+
+  .cost-body {
+    padding: 18px;
+    display: grid;
+    gap: 14px;
+  }
+
+  .saving-hero {
+    padding: 18px;
+    border: 1px solid rgba(10, 145, 141, .27);
+    border-radius: 8px;
+    background: linear-gradient(180deg, #effbfa, #fff);
+  }
+
+  .saving-hero span {
+    color: var(--apn);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .saving-hero strong {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 42px;
+    letter-spacing: -.03em;
+    line-height: 1;
+  }
+
+  .saving-hero p {
+    margin: 8px 0 0;
+    color: var(--ink-2);
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 680;
+  }
+
+  .cost-compare {
+    display: grid;
+    gap: 12px;
+  }
+
+  .cost-row {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr) 74px;
+    gap: 10px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink-2);
+    font-weight: 900;
+  }
+
+  .cost-track {
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e8eef2;
+  }
+
+  .cost-track i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    transition: width .35s ease;
+  }
+
+  .cost-track .aws {
+    background: var(--aws);
+  }
+
+  .cost-track .air {
+    background: var(--apn);
+  }
+
+  .ledger {
+    margin: 0 18px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #111518;
+    color: #dce7e5;
+    display: grid;
+    grid-template-rows: 36px minmax(0, 1fr);
+  }
+
+  .ledger-head {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    color: #8ea0a5;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .ledger-body {
+    min-height: 0;
+    padding: 11px 12px;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .log-line {
+    display: grid;
+    grid-template-columns: 44px 52px minmax(0, 1fr);
+    gap: 9px;
+    white-space: nowrap;
+  }
+
+  .log-line span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .log-line time {
+    color: #738589;
+  }
+
+  .log-line b {
+    color: #86f1da;
+  }
+
+  .log-line.warn b { color: #ffd38a; }
+  .log-line.hot b { color: #ff9999; }
+
+  .phase-timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0 18px 16px;
+  }
+
+  .phase-step {
+    position: relative;
+    padding: 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--muted);
+  }
+
+  .phase-step.active {
+    color: var(--apn);
+    border-color: rgba(10, 145, 141, .34);
+    background: #effbfa;
+  }
+
+  .phase-step strong {
+    display: block;
+    font-size: 13px;
+    color: currentColor;
+  }
+
+  .phase-step span {
+    display: block;
+    margin-top: 5px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 850;
+  }
+
+  @media (max-width: 1120px) {
+    body { padding: 12px; }
+    .topbar { flex-wrap: wrap; }
+    .deck { min-height: 0; }
+    .page { padding: 34px 24px 26px; }
+    .onboarding-body,
+    .live-grid,
+    .demo-head {
+      grid-template-columns: 1fr;
+    }
+    .state-card { width: 100%; }
+    .network-scene {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      min-height: 0;
+    }
+    .ingress {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .scheduler {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .load-panel { grid-row: 3; }
+    .node-status {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 760px) {
+    .brand { min-width: 0; width: 100%; }
+    .tabs { width: 100%; }
+    .tab-btn { flex: 1; }
+    .compare { grid-template-columns: 1fr; }
+    .headline { font-size: 38px; }
+    .subhead { font-size: 19px; }
+    .live-foot { grid-template-columns: 1fr 1fr; }
+    .mini-metric:nth-child(2) { border-right: 0; }
+    .mini-metric:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    .network-scene { grid-template-columns: 1fr; }
+    .ingress,
+    .scheduler,
+    .load-panel {
+      grid-column: 1;
+    }
+    .scheduler { grid-row: 2; }
+    .load-panel { grid-row: 3; }
+    .node-status {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <strong>Air Cloud</strong>
+        <span>X APN Network</span>
+      </div>
+
+      <div class="tabs" aria-label="pages">
+        <button class="tab-btn active" data-page="onboarding">01 Onboarding</button>
+        <button class="tab-btn" data-page="demo">02 Live Case</button>
+      </div>
+
+    </header>
+
+    <section class="deck" aria-label="Air Cloud autoscale demo deck">
+      <svg class="wave top" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wide" d="M-70 196 C 222 82, 438 300, 724 166 S 1130 62, 1510 186"/>
+        <path class="thin" d="M-80 222 C 226 122, 448 272, 740 204 S 1154 124, 1520 228"/>
+      </svg>
+      <svg class="wave" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wide" d="M-70 196 C 222 82, 438 300, 724 166 S 1130 62, 1510 186"/>
+        <path class="thin" d="M-80 222 C 226 122, 448 272, 740 204 S 1154 124, 1520 228"/>
+      </svg>
+
+      <div class="pages" id="pages" data-page="onboarding">
+        <section class="page onboarding" aria-label="onboarding">
+          <div class="hero-title">
+            <div class="eyebrow">Air cloud X APN Network</div>
+            <h1 class="headline">완전분산형 저지연 <span>AI Cloud</span> 데모</h1>
+            <div class="subhead">데이터센터 없이도, APN 기반 분산 워커 노드가 사용자 추론 요청을 탄력적으로 처리하는 장면을 보여줍니다.</div>
+          </div>
+
+          <div class="onboarding-body">
+            <div class="compare">
+              <article class="compare-panel">
+                <div class="panel-head">
+                  <h2>Before APN</h2>
+                  <small>centralized peak</small>
+                </div>
+                <div class="mini-topology">
+                  <div class="workload-cloud">
+                    <div class="mini-workload hot" style="left:8%;top:19%">Agent Workload</div>
+                    <div class="mini-workload hot" style="left:13%;top:37%">Agent Workload</div>
+                    <div class="mini-workload hot" style="left:7%;top:57%">Agent Workload</div>
+                    <div class="mini-workload hot" style="right:8%;top:24%">Agent Workload</div>
+                    <div class="mini-workload hot" style="right:13%;top:45%">Agent Workload</div>
+                    <div class="mini-workload hot" style="right:8%;top:65%">Agent Workload</div>
+                  </div>
+                  <div class="center-stack">
+                    <div class="dc">Central<br>GPU Pool</div>
+                    <span class="node-sub">fixed peak capacity</span>
+                  </div>
+                </div>
+                <div class="compare-foot">요청은 중앙 GPU 풀로 몰리고, 피크 기준으로 상시 비용을 잡아야 합니다.</div>
+              </article>
+
+              <article class="compare-panel">
+                <div class="panel-head">
+                  <h2>After APN</h2>
+                  <small>distributed air cloud</small>
+                </div>
+                <div class="mini-topology">
+                  <div class="edge-ring">
+                    <div class="edge-node">APN-01</div>
+                    <div class="edge-node">APN-02</div>
+                    <div class="edge-node">APN-03</div>
+                    <div class="edge-node">APN-04</div>
+                    <div class="edge-node">Router</div>
+                  </div>
+                  <div class="workload-cloud">
+                    <div class="mini-workload" style="left:7%;top:18%">Agent Workload</div>
+                    <div class="mini-workload" style="right:7%;top:20%">Agent Workload</div>
+                    <div class="mini-workload" style="left:10%;bottom:18%">Agent Workload</div>
+                    <div class="mini-workload" style="right:10%;bottom:18%">Agent Workload</div>
+                  </div>
+                </div>
+                <div class="compare-foot">요청은 가까운 분산 워커로 나뉘고, 필요한 순간에만 노드가 늘어납니다.</div>
+              </article>
+            </div>
+
+            <aside class="brief-panel">
+              <div>
+                <h2>What this demo shows</h2>
+                <p class="brief-copy">트래픽이 순차적으로 증가할 때 Air Cloud가 Agent Workload를 APN 워커 노드로 분산하고, AWS 고정 피크 대비 비용 절감이 누적되는 모습을 보여줍니다.</p>
+              </div>
+              <div class="show-list">
+                <div class="show-item"><b>01</b><div><strong>Traffic grows by scenario</strong><span>출시 트래픽, 비전 추론, 배치 작업 상황을 전환해 볼 수 있습니다.</span></div></div>
+                <div class="show-item"><b>02</b><div><strong>Agent workload distribution</strong><span>여러 PC 세션의 Agent traffic이 Air Cloud 워커 노드로 배분됩니다.</span></div></div>
+                <div class="show-item"><b>03</b><div><strong>AWS 대비 비용 절감</strong><span>피크 용량을 고정으로 켜두는 방식과 필요한 워커만 켜는 방식을 비교합니다.</span></div></div>
+              </div>
+              <button class="primary" id="startBtn">Live case 보기</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page demo-page" aria-label="live case">
+          <div class="demo-head">
+            <div class="demo-title">
+              <h1>Agent Traffic 분산 처리 데모</h1>
+              <p>Agent traffic is distributed across APN worker nodes. 트래픽이 늘어나는 순간마다 Air Cloud가 워커를 늘리고, 에이전트 작업을 여러 노드로 분산 처리합니다.</p>
+            </div>
+            <aside class="state-card">
+              <small id="sceneLabel">PHASE 01 / 출시 트래픽</small>
+              <strong id="sceneTitle">Agent 세션 급증 감지</strong>
+              <span id="sceneDesc">PC 세션별 Agent Workload가 늘어나며 Air Cloud 워커가 자동 확장됩니다.</span>
+            </aside>
+          </div>
+
+          <div class="live-grid">
+            <section class="network-panel">
+              <div class="panel-head">
+                <h2>Air Cloud Distributed Agent Runtime</h2>
+                <small id="policyText">policy: p95 &lt; 280ms</small>
+              </div>
+
+              <div class="network-scene">
+                <svg class="network-lines" viewBox="0 0 980 560" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="incoming" d="M460 150 C 555 145, 645 190, 760 252"/>
+                  <path class="distributed" d="M460 282 C 560 282, 652 282, 760 282"/>
+                  <path class="overflow" d="M460 414 C 555 420, 645 370, 760 312"/>
+                </svg>
+
+                <div class="ingress">
+                  <div class="device-panel">
+                    <div class="device-panel-head">
+                      <span>Live Agent Screens</span>
+                      <b id="deviceTotal">0 active</b>
+                    </div>
+                    <div class="traffic-controls" aria-label="traffic controls">
+                      <button class="traffic-btn up" id="trafficUp" type="button">Agent 늘리기</button>
+                      <button class="traffic-btn down" id="trafficDown" type="button">Agent 줄이기</button>
+                    </div>
+                    <div class="device-grid" id="deviceGrid" aria-label="agent workload source sessions"></div>
+                  </div>
+                </div>
+
+                <div class="scheduler">
+                  <div class="hub">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M12 3v4m0 10v4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8M3 12h4m10 0h4M5.6 18.4l2.8-2.8m7.2-7.2 2.8-2.8"/><circle cx="12" cy="12" r="4.3" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+                  </div>
+                  <span class="node-label">Air Cloud Router</span>
+                  <span class="node-sub" id="schedulerState">routing</span>
+                </div>
+
+                <div class="load-panel">
+                  <small>Agent workload pressure</small>
+                  <div class="load-value"><strong id="rps">240</strong><span>workload events</span></div>
+                  <div class="bar"><i id="loadBar"></i></div>
+                </div>
+              </div>
+
+              <div class="live-foot">
+                <div class="mini-metric"><small>Active workers</small><strong id="workers">5</strong></div>
+                <div class="mini-metric"><small>Queue depth</small><strong id="queue">14</strong></div>
+                <div class="mini-metric"><small>p95 latency</small><strong id="latency">168ms</strong></div>
+                <div class="mini-metric"><small>Processed workloads</small><strong id="calls">0</strong></div>
+              </div>
+
+              <div class="node-status" id="nodeStatus" aria-label="real-time node status"></div>
+            </section>
+
+            <aside class="cost-panel">
+              <div class="panel-head">
+                <h2>AWS 대비 비용 절감</h2>
+              </div>
+
+              <div class="cost-body">
+                <div class="saving-hero">
+                  <span>Accumulated saving</span>
+                  <strong id="savingWon">0원</strong>
+                  <p>Air Cloud는 피크 용량을 계속 켜두지 않고, 실제 요청량만큼 분산 워커를 켜서 비용을 줄입니다.</p>
+                </div>
+
+                <div class="cost-compare">
+                  <div class="cost-row">
+                    <span>AWS fixed</span>
+                    <div class="cost-track"><i class="aws" id="awsBar"></i></div>
+                    <span id="awsCost">0원</span>
+                  </div>
+                  <div class="cost-row">
+                    <span>Air Cloud</span>
+                    <div class="cost-track"><i class="air" id="airBar"></i></div>
+                    <span id="airCost">0원</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="phase-timeline" id="phaseTimeline"></div>
+
+              <div class="ledger">
+                <div class="ledger-head">aircloud/apn-routing-ledger</div>
+                <div class="ledger-body" id="ledgerBody"></div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+<script>
+const phases = [
+  {
+    chip: "출시 트래픽",
+    label: "PHASE 01 / 출시 트래픽",
+    title: "Agent 세션 급증 감지",
+    desc: "동시에 실행되는 PC Agent Workload를 가까운 APN 워커로 분산합니다.",
+    kind: "retail event",
+    policy: "policy: p95 < 280ms",
+    from: 180,
+    to: 980,
+    minWorkers: 2,
+    maxWorkers: 11,
+    queueBase: 12
+  },
+  {
+    chip: "비전 추론",
+    label: "PHASE 02 / 비전 추론",
+    title: "비전 추론 워크로드 분산",
+    desc: "Agent가 호출하는 이미지/영상 추론 작업이 GPU 워커 노드로 분산됩니다.",
+    kind: "vision infer",
+    policy: "policy: GPU util 72%",
+    from: 720,
+    to: 1420,
+    minWorkers: 3,
+    maxWorkers: 14,
+    queueBase: 24
+  },
+  {
+    chip: "배치 작업",
+    label: "PHASE 03 / 배치 작업",
+    title: "배치 작업까지 동시 처리",
+    desc: "실시간 요청을 유지하면서 문서/에이전트 배치 작업을 남는 워커에 분산합니다.",
+    kind: "agent batch",
+    policy: "policy: drain queue < 5min",
+    from: 960,
+    to: 1680,
+    minWorkers: 4,
+    maxWorkers: 16,
+    queueBase: 36
+  }
+];
+
+const $ = (id) => document.getElementById(id);
+const els = {
+  pages: $("pages"),
+  startBtn: $("startBtn"),
+  sceneLabel: $("sceneLabel"),
+  sceneTitle: $("sceneTitle"),
+  sceneDesc: $("sceneDesc"),
+  policyText: $("policyText"),
+  deviceGrid: $("deviceGrid"),
+  deviceTotal: $("deviceTotal"),
+  trafficUp: $("trafficUp"),
+  trafficDown: $("trafficDown"),
+  chatStream: $("chatStream"),
+  schedulerState: $("schedulerState"),
+  rps: $("rps"),
+  loadBar: $("loadBar"),
+  workers: $("workers"),
+  queue: $("queue"),
+  latency: $("latency"),
+  calls: $("calls"),
+  savingWon: $("savingWon"),
+  awsBar: $("awsBar"),
+  airBar: $("airBar"),
+  awsCost: $("awsCost"),
+  airCost: $("airCost"),
+  ledgerBody: $("ledgerBody"),
+  phaseTimeline: $("phaseTimeline"),
+  nodeStatus: $("nodeStatus"),
+};
+
+let pageName = "onboarding";
+let playing = true;
+let startedAt = performance.now();
+let lastPhase = -1;
+let processedCalls = 0;
+let savingWon = 0;
+let awsCost = 0;
+let airCost = 0;
+let ledger = [];
+let lastTick = performance.now();
+let pendingSaving = 0;
+let nextSavingAt = performance.now() + 1700;
+let targetLoad = 140;
+let currentLoad = 120;
+let trafficLevel = 1;
+let chatMessages = [];
+let nextChatAt = performance.now() + 800;
+const levelLoads = [140, 280, 520, 820, 1180, 1580];
+
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function ease(t) {
+  return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+}
+
+function won(v) {
+  return Math.round(v).toLocaleString("ko-KR") + "원";
+}
+
+function setPage(next) {
+  pageName = next;
+  els.pages.dataset.page = next;
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.page === next);
+  });
+}
+
+function elapsedInfo(now) {
+  const loadPhase = currentLoad < 720 ? 0 : currentLoad < 1220 ? 1 : 2;
+  const total = (now - startedAt) / 1000;
+  const phase = loadPhase;
+  const local = (total % 10) / 10;
+  return { total, phase, local };
+}
+
+function phaseLoad() {
+  targetLoad = levelLoads[trafficLevel - 1];
+  const drift = (targetLoad - currentLoad) * .065;
+  const pulse = Math.sin(performance.now() / 520) * 10;
+  currentLoad = clamp(currentLoad + drift + pulse, 90, 1680);
+  return Math.round(currentLoad);
+}
+
+function activeWorkers(load, p) {
+  const perWorker = p.kind === "agent batch" ? 118 : p.kind === "vision infer" ? 126 : 138;
+  return clamp(Math.ceil(load / perWorker), p.minWorkers, p.maxWorkers);
+}
+
+function latencyFor(load, workers, p) {
+  const capacity = workers * (p.kind === "agent batch" ? 128 : 148);
+  const pressure = load / capacity;
+  return Math.round(92 + Math.max(0, pressure - .48) * 138 + Math.max(0, pressure - .92) * 260);
+}
+
+function distribute(workers) {
+  const a = Math.ceil(workers * .38);
+  const b = Math.ceil(workers * .34);
+  const c = Math.max(1, workers - a - b);
+  return [a, b, c];
+}
+
+function renderWorkers(workers) {
+  const dist = distribute(workers);
+  const statusCards = [];
+  dist.forEach((active, zi) => {
+    const max = zi === 2 ? 4 : 6;
+    const zoneName = zi === 0 ? "Air Cloud + Seoul" : zi === 1 ? "Air Cloud + Busan" : "Air Cloud + Device";
+    for (let i = 1; i <= max; i += 1) {
+      const state = i <= active ? "active" : i === active + 1 && active < max ? "warming" : "inactive";
+      const id = `w${zi + 1}-${String(i).padStart(2, "0")}`;
+      statusCards.push({ id, zone: zoneName, state, load: state === "active" ? 62 + ((i + zi * 7 + workers) % 24) : state === "warming" ? 18 : 0 });
+    }
+  });
+  els.nodeStatus.innerHTML = statusCards.map((node) => (
+    `<div class="node-status-card ${node.state}" style="--load:${node.load}%">
+      <div class="node-face">
+        <div class="node-leds"><i class="${node.state === "active" ? "on" : node.state === "warming" ? "warn" : ""}"></i><i class="${node.state === "active" ? "on" : ""}"></i><i></i></div>
+        <div class="node-ports"><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="node-copy">
+        <strong>${node.id}<i class="status-badge">${node.state}</i></strong>
+        <span>${node.zone}</span>
+        <div class="node-meter"><i></i></div>
+      </div>
+    </div>`
+  )).join("");
+}
+
+const sourceDevices = [
+  { name: "PC 01", role: "Codex agent" },
+  { name: "PC 02", role: "Codex agent" },
+  { name: "PC 03", role: "Codex agent" },
+  { name: "PC 04", role: "Codex agent" },
+  { name: "PC 05", role: "Codex agent" },
+  { name: "PC 06", role: "Codex agent" }
+];
+
+const agentScreens = [
+  ["repo context scan", "tool: read_file()", "stream: patch plan"],
+  ["image task queue", "tool: vision_infer()", "stream: response"],
+  ["code edit request", "tool: apply_patch()", "stream: diff summary"],
+  ["doc QA request", "tool: retrieve_context()", "stream: answer draft"],
+  ["test execution", "tool: run_checks()", "stream: result parse"],
+  ["batch reasoning", "tool: schedule_worker()", "stream: worker sync"]
+];
+
+function renderDevices(load, phase, local) {
+  const activeCount = clamp(trafficLevel, 1, sourceDevices.length);
+  const totalShare = sourceDevices.reduce((sum, _, i) => {
+    const active = i < activeCount;
+    return sum + (active ? 1 + ((i + phase) % 3) * .18 : 0);
+  }, 0);
+  let assigned = 0;
+  els.deviceGrid.innerHTML = sourceDevices.map((device, i) => {
+    const active = i < activeCount;
+    const hot = active && ((i + Math.floor(local * 8)) % 3 === 0);
+    const expanded = active && i >= Math.max(0, activeCount - 2);
+    const weight = active ? 1 + ((i + phase) % 3) * .18 : 0;
+    const events = active ? Math.max(28, Math.round(load * weight / Math.max(totalShare, 1))) : 0;
+    const workloads = active ? clamp(Math.round(events / 58), 1, 18) : 0;
+    const hops = active ? clamp(Math.round(workloads * (2.4 + phase * .55) + ((i + Math.floor(local * 10)) % 4)), 2, 64) : 0;
+    const pct = active ? clamp(Math.round((events / Math.max(load, 1)) * 180), 18, 100) : 0;
+    const nodePrefix = i % 3 === 0 ? "w1" : i % 3 === 1 ? "w2" : "w3";
+    const nodeId = `${nodePrefix}-${String(((Math.floor(local * 12) + i + phase) % 4) + 1).padStart(2, "0")}`;
+    const lines = agentScreens[i].map((line, li) => {
+      const suffix = li === 0 ? `#${String(workloads + i + phase).padStart(2, "0")}` : li === 1 ? `-> ${nodeId}` : `${hops} hops`;
+      return `<span>${active ? line : "standby"} ${active ? suffix : ""}</span>`;
+    }).join("");
+    if (active) assigned += workloads;
+    return `<div class="device-card ${!active ? "idle" : hot ? "hot" : "active"} ${expanded ? "expanded" : ""}" style="--device-load:${pct}%">
+      <div class="pc-titlebar">
+        <span class="pc-dots"><i></i><i></i><i></i></span>
+        <span class="pc-title">${device.name}</span>
+        <span class="pc-state">${active ? "agent on" : "sleep"}</span>
+      </div>
+      <div class="pc-body">
+        <div class="agent-prompt"><i></i><span>${active ? `${device.role} running` : "agent idle"}</span></div>
+        <div class="agent-lines">${lines}</div>
+        <div class="agent-route"><span>${active ? `${workloads} workloads` : "no workload"}</span><span>${active ? `GPU ${nodeId}` : "standby"}</span></div>
+        <div class="device-load"><i></i></div>
+      </div>
+    </div>`;
+  }).join("");
+  els.deviceTotal.textContent = `${activeCount} active agents · ${assigned.toLocaleString("ko-KR")} workloads`;
+}
+
+const workloadTypes = [
+  "Context retrieval",
+  "Tool call",
+  "Code search",
+  "Patch planning",
+  "Image analysis",
+  "Document QA",
+  "Test execution",
+  "Response draft"
+];
+
+function pushChat(role, text, meta, state = "") {
+  chatMessages.push({ role, text, meta, state });
+  chatMessages = chatMessages.slice(-7);
+  if (!els.chatStream) return;
+  els.chatStream.innerHTML = chatMessages.map((msg) => (
+    msg.role === "workload"
+      ? `<div class="chat-msg workload"><strong>${msg.meta}</strong><span>${msg.text}</span><i class="workload-state">${msg.state}</i></div>`
+      : `<div class="chat-msg ${msg.role}"><small>${msg.meta}</small>${msg.text}</div>`
+  )).join("");
+}
+
+function maybeEmitChat(now, load, workers, phase) {
+  if (now < nextChatAt) return;
+  const activeCount = clamp(trafficLevel, 1, sourceDevices.length);
+  const sourceIndex = (processedCalls + phase) % activeCount;
+  const source = sourceDevices[sourceIndex].name;
+  const workload = workloadTypes[(processedCalls + workers + phase) % workloadTypes.length];
+  const nodePrefix = sourceIndex % 3 === 0 ? "w1" : sourceIndex % 3 === 1 ? "w2" : "w3";
+  const nodeId = `${nodePrefix}-${String(((processedCalls + workers + sourceIndex) % 4) + 1).padStart(2, "0")}`;
+  const state = load > 980 && processedCalls % 3 === 0 ? "RUNNING" : "DONE";
+  pushChat("workload", `${workload} ⇄ ${nodeId}`, source, state);
+  nextChatAt = now + clamp(2300 - load * .8, 650, 2200);
+}
+
+function renderTimeline(phase) {
+  els.phaseTimeline.innerHTML = phases.map((p, i) => (
+    `<div class="phase-step ${i === phase ? "active" : ""}"><strong>${p.chip}</strong><span>${i < phase ? "completed" : i === phase ? "running" : "queued"}</span></div>`
+  )).join("");
+}
+
+function log(type, text) {
+  const stamp = new Date().toLocaleTimeString("ko-KR", { hour12: false }).slice(0, 8);
+  ledger.unshift({ type, stamp, text });
+  ledger = ledger.slice(0, 10);
+  els.ledgerBody.innerHTML = ledger.map((entry) => (
+    `<div class="log-line ${entry.type}"><time>${entry.stamp}</time><b>${entry.type.toUpperCase()}</b><span>${entry.text}</span></div>`
+  )).join("");
+}
+
+function reset() {
+  startedAt = performance.now();
+  lastTick = performance.now();
+  lastPhase = -1;
+  processedCalls = 0;
+  savingWon = 0;
+  awsCost = 0;
+  airCost = 0;
+  ledger = [];
+  pendingSaving = 0;
+  nextSavingAt = performance.now() + 1700;
+  targetLoad = 140;
+  currentLoad = 120;
+  trafficLevel = 1;
+  chatMessages = [];
+  nextChatAt = performance.now() + 800;
+  log("ok", "demo initialized, waiting for traffic");
+  pushChat("workload", "Context retrieval ⇄ w1-01", "PC 01", "READY");
+}
+
+function setPlaying(next) {
+  playing = next;
+}
+
+function update(now) {
+  if (playing) {
+    const info = elapsedInfo(now);
+    const p = phases[info.phase];
+    const load = phaseLoad();
+    const workers = activeWorkers(load, p);
+    const latency = latencyFor(load, workers, p);
+    const queue = clamp(Math.round((load / 42) - workers * 2 + p.queueBase * info.local), 0, 99);
+
+    if (lastPhase !== info.phase) {
+      lastPhase = info.phase;
+      els.sceneLabel.textContent = p.label;
+      els.sceneTitle.textContent = p.title;
+      els.sceneDesc.textContent = p.desc;
+      els.policyText.textContent = p.policy;
+      renderTimeline(info.phase);
+      log(info.phase === 0 ? "hot" : "warn", `${p.chip} started`);
+    }
+
+    const dt = Math.min(1.2, (now - lastTick) / 1000);
+    lastTick = now;
+    const callsThisTick = Math.max(1, Math.round((load / 95) * dt));
+    processedCalls += callsThisTick;
+    const savePerCall = 2 + ((processedCalls + info.phase) % 2) + ((processedCalls % 7 === 0) ? .5 : 0);
+    pendingSaving += callsThisTick * savePerCall;
+    if (now >= nextSavingAt) {
+      const releaseRatio = .42 + (((processedCalls + info.phase * 11) % 37) / 100);
+      const released = Math.min(pendingSaving, Math.max(18, Math.round(pendingSaving * releaseRatio)));
+      savingWon += released;
+      pendingSaving = Math.max(0, pendingSaving - released);
+      nextSavingAt = now + 1400 + ((processedCalls * 73) % 1700);
+      log("ok", `saving +${won(released)}`);
+    }
+    awsCost += callsThisTick * 8.4;
+    airCost += callsThisTick * (8.4 - savePerCall);
+
+    if (processedCalls % 37 < callsThisTick) {
+      log("ok", `${callsThisTick} workload events -> ${workers} workers`);
+    }
+
+    const airRatio = clamp(airCost / Math.max(awsCost, 1) * 100, 4, 100);
+    const util = clamp(Math.round(load / (workers * 16)), 42, 91);
+
+    document.querySelectorAll(".chip").forEach((btn) => {
+      btn.classList.toggle("active", Number(btn.dataset.phase) === info.phase);
+    });
+
+    els.schedulerState.textContent = info.local < .38 ? "routing" : info.local < .72 ? `scale to ${workers}` : "balancing";
+    maybeEmitChat(now, load, workers, info.phase);
+    renderDevices(load, info.phase, info.local);
+    els.rps.textContent = load.toLocaleString("ko-KR");
+    els.loadBar.style.width = `${clamp(load / phases[2].to * 100, 6, 100)}%`;
+    els.workers.textContent = workers;
+    els.queue.textContent = String(queue).padStart(2, "0");
+    els.latency.textContent = `${latency}ms`;
+    els.calls.textContent = processedCalls.toLocaleString("ko-KR");
+    els.savingWon.textContent = won(savingWon);
+    els.awsBar.style.width = "100%";
+    els.airBar.style.width = `${airRatio}%`;
+    els.awsCost.textContent = won(awsCost);
+    els.airCost.textContent = won(airCost);
+    renderWorkers(workers);
+
+    if (util > 84 && info.local > .45) {
+      els.schedulerState.textContent = "adding workers";
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.addEventListener("click", () => setPage(btn.dataset.page));
+});
+
+document.querySelectorAll(".chip").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const target = Number(btn.dataset.phase);
+    trafficLevel = target === 0 ? 2 : target === 1 ? 4 : 6;
+    targetLoad = levelLoads[trafficLevel - 1];
+    currentLoad = targetLoad * .88;
+    lastPhase = -1;
+    setPage("demo");
+    setPlaying(true);
+  });
+});
+
+els.trafficUp.addEventListener("click", () => {
+  trafficLevel = clamp(trafficLevel + 1, 1, sourceDevices.length);
+  targetLoad = levelLoads[trafficLevel - 1];
+  setPage("demo");
+  setPlaying(true);
+  pushChat("workload", `${sourceDevices[trafficLevel - 1].name} session added`, "Agent +", "SCALE");
+});
+
+els.trafficDown.addEventListener("click", () => {
+  trafficLevel = clamp(trafficLevel - 1, 1, sourceDevices.length);
+  targetLoad = levelLoads[trafficLevel - 1];
+  setPage("demo");
+  setPlaying(true);
+  pushChat("workload", `${trafficLevel} agent sessions remain`, "Agent -", "SCALE-IN");
+});
+
+els.startBtn.addEventListener("click", () => {
+  reset();
+  setPage("demo");
+  setPlaying(true);
+});
+
+reset();
+renderWorkers(5);
+renderDevices(180, 0, 0);
+renderTimeline(0);
+requestAnimationFrame(update);
+</script>
+</body>
+</html>
