@@ -485,10 +485,7 @@
   }
 
   .demo-head {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 18px;
-    align-items: end;
+    display: block;
   }
 
   .demo-title h1 {
@@ -496,45 +493,6 @@
     font-size: clamp(32px, 3.8vw, 58px);
     line-height: 1.04;
     font-weight: 880;
-  }
-
-  .demo-title p {
-    margin: 12px 0 0;
-    color: var(--ink-2);
-    font-size: 18px;
-    line-height: 1.45;
-    font-weight: 620;
-  }
-
-  .state-card {
-    width: 310px;
-    padding: 17px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    background: rgba(255,255,255,.82);
-  }
-
-  .state-card small {
-    color: var(--muted);
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 850;
-  }
-
-  .state-card strong {
-    display: block;
-    margin-top: 8px;
-    font-size: 24px;
-    line-height: 1.14;
-  }
-
-  .state-card span {
-    display: block;
-    margin-top: 8px;
-    color: var(--ink-2);
-    font-size: 14px;
-    line-height: 1.45;
-    font-weight: 620;
   }
 
   .live-grid {
@@ -1393,11 +1351,9 @@
     .deck { min-height: 0; }
     .page { padding: 34px 24px 26px; }
     .onboarding-body,
-    .live-grid,
-    .demo-head {
+    .live-grid {
       grid-template-columns: 1fr;
     }
-    .state-card { width: 100%; }
     .network-scene {
       grid-template-columns: 1fr;
       grid-template-rows: auto auto auto;
@@ -1541,13 +1497,7 @@
           <div class="demo-head">
             <div class="demo-title">
               <h1>Agent Traffic 분산 처리 데모</h1>
-              <p>Agent traffic is distributed across APN worker nodes. 트래픽이 늘어나는 순간마다 Air Cloud가 워커를 늘리고, 에이전트 작업을 여러 노드로 분산 처리합니다.</p>
             </div>
-            <aside class="state-card">
-              <small id="sceneLabel">PHASE 01 / 출시 트래픽</small>
-              <strong id="sceneTitle">Agent 세션 급증 감지</strong>
-              <span id="sceneDesc">PC 세션별 Agent Workload가 늘어나며 Air Cloud 워커가 자동 확장됩니다.</span>
-            </aside>
           </div>
 
           <div class="live-grid">
@@ -1689,9 +1639,6 @@ const $ = (id) => document.getElementById(id);
 const els = {
   pages: $("pages"),
   startBtn: $("startBtn"),
-  sceneLabel: $("sceneLabel"),
-  sceneTitle: $("sceneTitle"),
-  sceneDesc: $("sceneDesc"),
   policyText: $("policyText"),
   deviceGrid: $("deviceGrid"),
   deviceTotal: $("deviceTotal"),
@@ -1962,9 +1909,6 @@ function update(now) {
 
     if (lastPhase !== info.phase) {
       lastPhase = info.phase;
-      els.sceneLabel.textContent = p.label;
-      els.sceneTitle.textContent = p.title;
-      els.sceneDesc.textContent = p.desc;
       els.policyText.textContent = p.policy;
       renderTimeline(info.phase);
       log(info.phase === 0 ? "hot" : "warn", `${p.chip} started`);
