@@ -977,28 +977,84 @@
 
   .agent-console {
     min-width: 0;
-    height: 38px;
+    height: 78px;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 9px;
-    align-items: center;
-    padding: 0 11px;
+    grid-template-rows: 21px minmax(0, 1fr);
     overflow: hidden;
     border-radius: 4px;
     background: #11191e;
     color: #c8d2d7;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 9px;
     box-shadow: inset 3px 0 0 #20b8ae;
   }
 
-  .agent-console > span {
+  .agent-console-head {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 9px 0 11px;
+    border-bottom: 1px solid rgba(124, 151, 162, .2);
+    background: #182329;
+  }
+
+  .agent-console-head span {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #aebdc4;
+    font-weight: 800;
+  }
+
+  .agent-console-head span i {
+    width: 6px;
+    height: 6px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: #65d2ca;
+    box-shadow: 0 0 0 3px rgba(101, 210, 202, .1);
+  }
+
+  .agent-console-head b {
     color: #65d2ca;
-    font-size: 14px;
+    font-size: 8px;
     font-weight: 900;
   }
 
-  .agent-console code {
+  .agent-console-lines {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    align-content: end;
+    gap: 1px;
+    padding: 5px 9px 5px 11px;
+    overflow: hidden;
+  }
+
+  .terminal-line {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 10px minmax(0, 1fr);
+    gap: 5px;
+    align-items: center;
+    color: #8fa2aa;
+    line-height: 1.15;
+  }
+
+  .terminal-line i {
+    color: #59727c;
+    font-style: normal;
+    font-weight: 900;
+  }
+
+  .terminal-line code {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1007,9 +1063,31 @@
     font-family: inherit;
   }
 
-  .agent-console b {
+  .terminal-line.done {
+    color: #b8c6cb;
+  }
+
+  .terminal-line.done i {
     color: #65d2ca;
-    font-size: 9px;
+  }
+
+  .terminal-line.current {
+    color: #65d2ca;
+  }
+
+  .terminal-line.current code::after {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 9px;
+    margin-left: 4px;
+    vertical-align: -1px;
+    background: currentColor;
+    animation: terminalCursor .8s steps(1) infinite;
+  }
+
+  @keyframes terminalCursor {
+    50% { opacity: 0; }
   }
 
   .agent-lines span {
@@ -3412,8 +3490,8 @@
     }
 
     body[data-view="demo"] .agent-console {
-      height: 40px;
-      font-size: 10px;
+      height: 76px;
+      font-size: 9px;
     }
 
     body[data-view="demo"] .agent-step {
@@ -3681,8 +3759,8 @@
     }
 
     body[data-view="demo"] .agent-console {
-      height: 46px;
-      font-size: 11px;
+      height: 88px;
+      font-size: 10px;
     }
 
     body[data-view="demo"] .agent-telemetry dt {
@@ -4165,12 +4243,12 @@ const agentScreens = [
 ];
 
 const agentConsoleLines = [
-  ["indexing repository symbols", "dispatch code_search tool", "validating patch dependencies", "streaming code response"],
-  ["loading visual embeddings", "dispatch detect_objects tool", "merging vision features", "streaming visual answer"],
-  ["querying enterprise knowledge", "reranking source evidence", "building cited context", "streaming research brief"],
-  ["reading service telemetry", "correlating distributed traces", "applying remediation plan", "watching health signals"],
-  ["scanning partition metadata", "executing distributed query", "validating result rows", "streaming data summary"],
-  ["splitting workload batches", "dispatching parallel workers", "merging partial outputs", "verifying batch result"]
+  ["$ claude --task autoscale-routing", "Reading src/runtime/scheduler.ts", "Indexed 184 symbols across 26 files", "tool code_search: worker pool policy", "tool_result: 12 matches in 38ms", "Editing scheduler scale-out policy", "Running autoscale.test.ts", "18 passed · streaming final response"],
+  ["$ agent run vision-analysis", "Loading image input 2048x1024", "Creating multimodal embeddings", "tool detect_objects: frame_018", "tool_result: 7 regions detected", "Routing tensor to w2-03", "Merging visual evidence", "Streaming visual answer"],
+  ["$ agent run enterprise-research", "Searching internal knowledge index", "Retrieved 42 candidate documents", "tool rerank: top_k=8", "tool_result: confidence 0.94", "Building grounded context", "Validating source citations", "Streaming research brief"],
+  ["$ agent run service-ops", "Reading service health metrics", "Tracing request apn-7f21", "tool query_metrics: gpu_pool", "tool_result: p95 118ms", "Correlating worker events", "Applying remediation plan", "Watching recovery signals"],
+  ["$ agent run data-analysis", "Scanning partition metadata", "Planning distributed SQL query", "tool execute_query: shard_04", "tool_result: 18,492 rows", "Validating schema and nulls", "Summarizing result set", "Streaming data summary"],
+  ["$ agent run nightly-batch", "Splitting 640 workload items", "Dispatching 16 parallel workers", "tool batch_execute: group_08", "tool_result: 8/8 completed", "Merging partial outputs", "Running output validation", "Batch complete · publishing result"]
 ];
 
 const agentRoutes = [
@@ -4242,7 +4320,19 @@ function renderDevices(load, phase, local) {
     const gpuNode = active ? route[stepIndex % route.length] : "--";
     const rtt = active ? 82 + ((i * 17 + workloads * 5 + stepIndex * 9) % 91) : 0;
     const tps = active ? 24 + ((i * 13 + events + stepIndex * 7) % 54) : 0;
-    const consoleText = active ? agentConsoleLines[i][stepIndex] : "awaiting agent workload";
+    const terminalTick = Math.floor(performance.now() / 620) + i * 2;
+    const terminalLines = active
+      ? Array.from({ length: 4 }, (_, row) => {
+          const messageIndex = (terminalTick - (3 - row) + agentConsoleLines[i].length * 4) % agentConsoleLines[i].length;
+          const message = agentConsoleLines[i][messageIndex];
+          const state = row === 3 ? "current" : message.startsWith("tool_result") || message.includes("passed") || message.includes("complete") ? "done" : "";
+          const glyph = row === 3 ? "›" : state === "done" ? "✓" : "·";
+          return `<span class="terminal-line ${state}"><i>${glyph}</i><code>${message}</code></span>`;
+        }).join("")
+      : `<span class="terminal-line"><i>$</i><code>agent-runtime --standby</code></span>
+         <span class="terminal-line"><i>·</i><code>workspace mounted</code></span>
+         <span class="terminal-line"><i>·</i><code>GPU route unavailable</code></span>
+         <span class="terminal-line current"><i>›</i><code>waiting for Start</code></span>`;
     const lines = agentScreens[i].map((line, li) => {
       const state = !active ? "" : li < stepIndex ? "done" : li === stepIndex ? "running" : "";
       const status = !active ? "IDLE" : li < stepIndex ? "DONE" : li === stepIndex ? `GPU ${route[li % route.length]}` : "WAIT";
@@ -4268,7 +4358,10 @@ function renderDevices(load, phase, local) {
             <div><dt>TPS</dt><dd>${active ? tps : "--"}</dd></div>
           </dl>
         </div>
-        <div class="agent-console"><span>›</span><code>${consoleText}</code><b>${active ? "STREAM" : "IDLE"}</b></div>
+        <div class="agent-console">
+          <div class="agent-console-head"><span><i></i>agent@${device.name.toLowerCase().replace(" ", "-")}:~/workspace</span><b>${active ? "STREAMING" : "STANDBY"}</b></div>
+          <div class="agent-console-lines">${terminalLines}</div>
+        </div>
         <div class="agent-route"><span class="route-chain">${active ? route.join(" → ") : "no route"}</span><span>${active ? `↔ ${hops} hops` : "standby"}</span></div>
         <div class="device-load"><i></i></div>
       </div>
