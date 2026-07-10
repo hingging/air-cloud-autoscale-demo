@@ -588,6 +588,11 @@
   .hub svg {
     width: 42px;
     height: 42px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .ingress .hub {
@@ -608,39 +613,91 @@
 
   .device-panel-head {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 10px;
     margin-bottom: 12px;
   }
 
-  .device-panel-head span {
+  .device-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: var(--ink);
     font-size: 16px;
     font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .device-title svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .device-panel-head b {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
     color: var(--blue);
     font-family: var(--mono);
     font-size: 13px;
   }
 
+  .device-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+
+  .device-stat svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .agent-toolbar {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
   .traffic-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 12px;
+    display: inline-flex;
+    gap: 6px;
   }
 
   .traffic-btn {
-    height: 42px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 7px;
     background: #fff;
     color: var(--ink);
-    font-weight: 900;
     cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+  }
+
+  .traffic-btn svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
   }
 
   .traffic-btn.up {
@@ -652,6 +709,15 @@
   .traffic-btn.down {
     color: var(--ink-2);
     background: #f8fafb;
+  }
+
+  .traffic-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(10,145,141,.38);
+  }
+
+  .traffic-btn:active {
+    transform: translateY(0);
   }
 
   .device-grid {
@@ -1641,13 +1707,19 @@
     stroke: rgba(27, 111, 255, .42);
   }
 
-  .route-lane circle {
+  .route-lane circle.packet {
     fill: var(--apn);
     filter: drop-shadow(0 0 5px rgba(10, 145, 141, .7));
   }
 
-  .route-lane circle:nth-of-type(2) {
+  .route-lane circle.packet.back {
     fill: var(--blue);
+  }
+
+  .route-lane circle.route-port {
+    fill: #fff;
+    stroke: var(--apn);
+    stroke-width: 2.5;
   }
 
   .ingress,
@@ -1747,6 +1819,7 @@
       grid-template-rows: auto auto auto;
       min-height: 0;
     }
+    .network-lines { display: none; }
     .ingress {
       grid-column: 1;
       grid-row: 1;
@@ -1813,6 +1886,14 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .device-grid { grid-template-columns: 1fr; }
+    .device-panel-head {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    .agent-toolbar {
+      width: 100%;
+      justify-content: space-between;
+    }
     .impact-hero {
       min-height: 1120px;
       padding: 44px 22px 250px;
@@ -1933,23 +2014,25 @@
 
               <div class="network-scene">
                 <svg class="network-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
-                  <g class="route-lane" data-route="0"><path id="route0" d="M360 126 C570 126 654 210 860 292"/><circle r="5"><animateMotion dur="1.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route0"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.7s" begin="-.8s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route0"/></animateMotion></circle></g>
-                  <g class="route-lane" data-route="1"><path id="route1" d="M716 126 C780 144 800 220 860 292"/><circle r="5"><animateMotion dur="1.45s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route1"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.45s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route1"/></animateMotion></circle></g>
-                  <g class="route-lane" data-route="2"><path id="route2" d="M360 292 C560 292 660 292 860 292"/><circle r="5"><animateMotion dur="1.6s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route2"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.6s" begin="-.8s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route2"/></animateMotion></circle></g>
-                  <g class="route-lane" data-route="3"><path id="route3" d="M716 292 C766 292 812 292 860 292"/><circle r="5"><animateMotion dur="1.35s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route3"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.35s" begin="-.65s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route3"/></animateMotion></circle></g>
-                  <g class="route-lane" data-route="4"><path id="route4" d="M360 458 C570 458 654 374 860 292"/><circle r="5"><animateMotion dur="1.9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route4"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.9s" begin="-.9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route4"/></animateMotion></circle></g>
-                  <g class="route-lane" data-route="5"><path id="route5" d="M716 458 C780 440 800 364 860 292"/><circle r="5"><animateMotion dur="1.55s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route5"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.55s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route5"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="0"><path id="route0"/><circle class="route-port" r="4"/><circle class="packet out" r="5"><animateMotion dur="1.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route0"/></animateMotion></circle><circle class="packet back" r="3.5"><animateMotion dur="1.7s" begin="-.8s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route0"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="1"><path id="route1"/><circle class="route-port" r="4"/><circle class="packet out" r="5"><animateMotion dur="1.45s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route1"/></animateMotion></circle><circle class="packet back" r="3.5"><animateMotion dur="1.45s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route1"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="2"><path id="route2"/><circle class="route-port" r="4"/><circle class="packet out" r="5"><animateMotion dur="1.6s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route2"/></animateMotion></circle><circle class="packet back" r="3.5"><animateMotion dur="1.6s" begin="-.8s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route2"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="3"><path id="route3"/><circle class="route-port" r="4"/><circle class="packet out" r="5"><animateMotion dur="1.35s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route3"/></animateMotion></circle><circle class="packet back" r="3.5"><animateMotion dur="1.35s" begin="-.65s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route3"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="4"><path id="route4"/><circle class="route-port" r="4"/><circle class="packet out" r="5"><animateMotion dur="1.9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route4"/></animateMotion></circle><circle class="packet back" r="3.5"><animateMotion dur="1.9s" begin="-.9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route4"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="5"><path id="route5"/><circle class="route-port" r="4"/><circle class="packet out" r="5"><animateMotion dur="1.55s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route5"/></animateMotion></circle><circle class="packet back" r="3.5"><animateMotion dur="1.55s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route5"/></animateMotion></circle></g>
                 </svg>
 
                 <div class="ingress">
                   <div class="device-panel">
                     <div class="device-panel-head">
-                      <span>Live Agent Screens</span>
-                      <b id="deviceTotal">0 active</b>
-                    </div>
-                    <div class="traffic-controls" aria-label="traffic controls">
-                      <button class="traffic-btn up" id="trafficUp" type="button">Agent 늘리기</button>
-                      <button class="traffic-btn down" id="trafficDown" type="button">Agent 줄이기</button>
+                      <span class="device-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Live Agent Screens</span>
+                      <div class="agent-toolbar">
+                        <b id="deviceTotal">0 active</b>
+                        <div class="traffic-controls" aria-label="Agent workload controls">
+                          <button class="traffic-btn down" id="trafficDown" type="button" aria-label="Agent workload 줄이기" title="Agent workload 줄이기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+                          <button class="traffic-btn up" id="trafficUp" type="button" aria-label="Agent workload 늘리기" title="Agent workload 늘리기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+                        </div>
+                      </div>
                     </div>
                     <div class="device-grid" id="deviceGrid" aria-label="agent workload source sessions"></div>
                   </div>
@@ -1957,9 +2040,9 @@
 
                 <div class="scheduler">
                   <div class="hub">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M12 3v4m0 10v4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8M3 12h4m10 0h4M5.6 18.4l2.8-2.8m7.2-7.2 2.8-2.8"/><circle cx="12" cy="12" r="4.3" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M8.2 7.2 10.8 15M15.8 7.2 13.2 15M8.5 6h7"/></svg>
                   </div>
-                  <span class="node-label">Air Cloud Router</span>
+                  <span class="node-label">Air Cloud Scheduler</span>
                   <span class="node-sub" id="schedulerState">routing</span>
                 </div>
 
@@ -2234,6 +2317,43 @@ const agentRoutes = [
   ["w3-03", "w1-04", "w2-04", "w3-01"]
 ];
 
+function syncRouteGeometry() {
+  const scene = document.querySelector(".network-scene");
+  const svg = document.querySelector(".network-lines");
+  const panel = document.querySelector(".device-panel");
+  const hub = document.querySelector(".scheduler .hub");
+  const cards = [...document.querySelectorAll(".device-card")];
+  if (!scene || !svg || !panel || !hub || !cards.length || scene.clientWidth === 0) return;
+
+  const sceneRect = scene.getBoundingClientRect();
+  const panelRect = panel.getBoundingClientRect();
+  const hubRect = hub.getBoundingClientRect();
+  const cardRects = cards.map((card) => card.getBoundingClientRect());
+  const targetX = hubRect.left + hubRect.width / 2 - sceneRect.left;
+  const targetY = hubRect.top + hubRect.height / 2 - sceneRect.top;
+  const sourceX = panelRect.right - sceneRect.left + 1;
+
+  svg.setAttribute("viewBox", `0 0 ${sceneRect.width} ${sceneRect.height}`);
+  document.querySelectorAll(".route-lane").forEach((lane, i) => {
+    const cardRect = cardRects[i];
+    const path = lane.querySelector("path");
+    const port = lane.querySelector(".route-port");
+    if (!cardRect || !path || !port) return;
+
+    const sharesPreviousRow = i > 0 && Math.abs(cardRects[i - 1].top - cardRect.top) < 3;
+    const sharesNextRow = i + 1 < cardRects.length && Math.abs(cardRects[i + 1].top - cardRect.top) < 3;
+    const rowOffset = sharesPreviousRow ? 6 : sharesNextRow ? -6 : 0;
+    const sourceY = cardRect.top + cardRect.height / 2 - sceneRect.top + rowOffset;
+    const distance = Math.max(70, targetX - sourceX);
+    const control1X = sourceX + distance * .32;
+    const control2X = targetX - distance * .34;
+
+    path.setAttribute("d", `M${sourceX} ${sourceY} C${control1X} ${sourceY}, ${control2X} ${targetY}, ${targetX} ${targetY}`);
+    port.setAttribute("cx", sourceX);
+    port.setAttribute("cy", sourceY);
+  });
+}
+
 function renderDevices(load, phase, local) {
   const activeCount = clamp(trafficLevel, 1, sourceDevices.length);
   const totalShare = sourceDevices.reduce((sum, _, i) => {
@@ -2278,8 +2398,13 @@ function renderDevices(load, phase, local) {
     </div>`;
   }).join("");
   document.querySelectorAll(".route-lane").forEach((lane, i) => lane.classList.toggle("active", i < activeCount));
+  syncRouteGeometry();
   const agentLabel = activeCount === 1 ? "agent" : "agents";
-  els.deviceTotal.textContent = `${activeCount} ${agentLabel} · ${assigned.toLocaleString("ko-KR")} tasks · ${totalHops.toLocaleString("ko-KR")} GPU hops`;
+  els.deviceTotal.setAttribute("aria-label", `${activeCount} ${agentLabel}, ${assigned} tasks, ${totalHops} GPU hops`);
+  els.deviceTotal.innerHTML = `
+    <span class="device-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>${activeCount}</span>
+    <span class="device-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3-9 5 9 5 9-5-9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg>${assigned.toLocaleString("ko-KR")}</span>
+    <span class="device-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7.8 7 11 16M16.2 7 13 16M8 6h8"/></svg>${totalHops.toLocaleString("ko-KR")}</span>`;
   return { assigned, totalHops };
 }
 
@@ -2471,6 +2596,8 @@ els.startBtn.addEventListener("click", () => {
   setPage("demo");
   setPlaying(true);
 });
+
+window.addEventListener("resize", syncRouteGeometry);
 
 reset();
 renderWorkers(5, 180);
