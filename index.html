@@ -977,22 +977,24 @@
 
   .agent-console {
     min-width: 0;
-    height: 28px;
+    height: 38px;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 7px;
+    gap: 9px;
     align-items: center;
-    padding: 0 8px;
+    padding: 0 11px;
     overflow: hidden;
     border-radius: 4px;
     background: #11191e;
     color: #c8d2d7;
     font-family: var(--mono);
-    font-size: 9px;
+    font-size: 11px;
+    box-shadow: inset 3px 0 0 #20b8ae;
   }
 
   .agent-console > span {
     color: #65d2ca;
+    font-size: 14px;
     font-weight: 900;
   }
 
@@ -1007,7 +1009,7 @@
 
   .agent-console b {
     color: #65d2ca;
-    font-size: 8px;
+    font-size: 9px;
   }
 
   .agent-lines span {
@@ -3378,8 +3380,8 @@
     }
 
     body[data-view="demo"] .agent-console {
-      height: 24px;
-      font-size: 8px;
+      height: 40px;
+      font-size: 10px;
     }
 
     body[data-view="demo"] .agent-step {
@@ -3647,8 +3649,8 @@
     }
 
     body[data-view="demo"] .agent-console {
-      height: 30px;
-      font-size: 10px;
+      height: 46px;
+      font-size: 11px;
     }
 
     body[data-view="demo"] .agent-telemetry dt {
