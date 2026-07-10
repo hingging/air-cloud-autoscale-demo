@@ -1926,9 +1926,490 @@
     }
     .impact-proof > div:last-child { border-bottom: 0; }
   }
+
+  /* Editorial landing inspired by network atlas layouts */
+  body[data-view="onboarding"] {
+    padding: 0;
+    background: #f1ede3;
+  }
+
+  body[data-view="onboarding"] .app {
+    width: 100%;
+    gap: 0;
+  }
+
+  body[data-view="onboarding"] .topbar {
+    min-height: 78px;
+    padding: 18px clamp(22px, 3.2vw, 52px) 12px;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(17, 19, 21, .28);
+    background: #f1ede3;
+  }
+
+  body[data-view="onboarding"] .brand {
+    min-width: 0;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  body[data-view="onboarding"] .brand strong {
+    color: var(--ink);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", var(--sans);
+    font-size: clamp(34px, 4vw, 58px);
+    font-style: normal;
+    font-weight: 900;
+    line-height: .82;
+    text-transform: uppercase;
+  }
+
+  body[data-view="onboarding"] .brand span {
+    padding-bottom: 2px;
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  body[data-view="onboarding"] .tabs {
+    height: auto;
+    padding: 0;
+    gap: clamp(18px, 3vw, 44px);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body[data-view="onboarding"] .tab-btn {
+    height: 34px;
+    padding: 0;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--ink);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", var(--sans);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  body[data-view="onboarding"] .tab-btn.active {
+    border-bottom-color: #dc351e;
+    background: transparent;
+    color: var(--ink);
+  }
+
+  body[data-view="onboarding"] .deck {
+    min-height: calc(100svh - 78px);
+    overflow: hidden;
+    border-radius: 0;
+    background: #f1ede3;
+    box-shadow: none;
+  }
+
+  body[data-view="onboarding"] .wave { display: none; }
+
+  body[data-view="onboarding"] .page,
+  body[data-view="onboarding"] .onboarding {
+    min-height: calc(100svh - 78px);
+  }
+
+  body[data-view="onboarding"] .impact-hero {
+    min-height: calc(100svh - 78px);
+    padding: 0;
+    background: #f1ede3;
+  }
+
+  body[data-view="onboarding"] .impact-hero::before {
+    content: none;
+  }
+
+  .editorial-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .editorial-grid i {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(19, 89, 170, .16);
+  }
+
+  .editorial-grid i:nth-child(1) { left: 28%; }
+  .editorial-grid i:nth-child(2) { left: 62%; }
+  .editorial-grid i:nth-child(3) { left: 84%; }
+
+  .editorial-grid::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 52%;
+    height: 1px;
+    background: rgba(19, 89, 170, .12);
+  }
+
+  .hero-coordinate {
+    position: absolute;
+    z-index: 4;
+    color: #1359aa;
+    font-family: var(--mono);
+    font-size: 9px;
+    line-height: 1.35;
+    font-weight: 900;
+  }
+
+  .coordinate-left {
+    left: 18px;
+    top: 49%;
+  }
+
+  .coordinate-right {
+    right: 22px;
+    bottom: 28px;
+    text-align: right;
+  }
+
+  body[data-view="onboarding"] .impact-copy {
+    position: relative;
+    z-index: 5;
+    width: min(630px, 45%);
+    padding: clamp(110px, 17vh, 190px) 0 150px clamp(54px, 8.5vw, 132px);
+  }
+
+  body[data-view="onboarding"] .impact-kicker {
+    color: #1359aa;
+    font-size: 10px;
+  }
+
+  body[data-view="onboarding"] .impact-kicker i {
+    height: 1px;
+    background: #1359aa;
+  }
+
+  body[data-view="onboarding"] .impact-copy h1 {
+    max-width: 8.6ch;
+    margin: 24px 0 26px;
+    color: #10110f;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", var(--sans);
+    font-size: clamp(62px, 7.1vw, 112px);
+    font-weight: 900;
+    line-height: .88;
+    text-transform: uppercase;
+  }
+
+  body[data-view="onboarding"] .impact-copy h1 span {
+    color: #dc351e;
+  }
+
+  body[data-view="onboarding"] .impact-copy p {
+    max-width: 440px;
+    color: #242522;
+    font-family: Georgia, "Times New Roman", var(--sans);
+    font-size: clamp(18px, 1.55vw, 24px);
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  body[data-view="onboarding"] .impact-cta {
+    width: 250px;
+    min-width: 0;
+    height: 58px;
+    margin-top: 30px;
+    padding: 0 20px;
+    border-radius: 0;
+    background: #dc351e;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", var(--sans);
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  body[data-view="onboarding"] .impact-cta:hover {
+    background: #111315;
+  }
+
+  body[data-view="onboarding"] .hero-fabric {
+    inset: 0 -1.5% 76px 27%;
+    z-index: 2;
+  }
+
+  body[data-view="onboarding"] .hero-fabric > svg {
+    overflow: visible;
+  }
+
+  body[data-view="onboarding"] .fabric-orbits circle,
+  body[data-view="onboarding"] .fabric-orbits line {
+    fill: none;
+    stroke: rgba(19, 89, 170, .22);
+    stroke-width: 1;
+  }
+
+  body[data-view="onboarding"] .fabric-orbits circle:nth-child(2) {
+    stroke: rgba(220, 53, 30, .3);
+  }
+
+  body[data-view="onboarding"] .fabric-orbits circle:nth-child(3) {
+    stroke-dasharray: 4 7;
+  }
+
+  body[data-view="onboarding"] .fabric-links path {
+    stroke: rgba(220, 53, 30, .55);
+    stroke-width: 1.2;
+    stroke-dasharray: none;
+  }
+
+  body[data-view="onboarding"] .fabric-links path:nth-child(even) {
+    stroke: rgba(19, 89, 170, .48);
+  }
+
+  body[data-view="onboarding"] .fabric-packets circle {
+    fill: #dc351e;
+  }
+
+  body[data-view="onboarding"] .fabric-packets circle:nth-child(2) {
+    fill: #1359aa;
+  }
+
+  body[data-view="onboarding"] .fabric-node {
+    width: 180px;
+    min-height: 58px;
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    column-gap: 11px;
+    align-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body[data-view="onboarding"] .fabric-node::before {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    align-self: center;
+    background: #171816;
+    color: #f1ede3;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 900;
+  }
+
+  body[data-view="onboarding"] .fabric-node.agent::before {
+    content: "AG";
+    border-radius: 50%;
+  }
+
+  body[data-view="onboarding"] .fabric-node.worker::before {
+    content: "GPU";
+    border: 2px solid #171816;
+    background: #f1ede3;
+    color: #171816;
+  }
+
+  body[data-view="onboarding"] .fabric-node small,
+  body[data-view="onboarding"] .fabric-node strong,
+  body[data-view="onboarding"] .fabric-node span {
+    grid-column: 2;
+    margin: 0;
+  }
+
+  body[data-view="onboarding"] .fabric-node small {
+    color: #1359aa;
+    font-size: 8px;
+  }
+
+  body[data-view="onboarding"] .fabric-node strong {
+    margin-top: 2px;
+    color: #141512;
+    font-size: 13px;
+  }
+
+  body[data-view="onboarding"] .fabric-node span {
+    margin-top: 2px;
+    color: #dc351e;
+    font-size: 9px;
+  }
+
+  body[data-view="onboarding"] .fabric-node.n1 { left: 14%; top: 10%; }
+  body[data-view="onboarding"] .fabric-node.n2 { left: 5%; top: 42%; }
+  body[data-view="onboarding"] .fabric-node.n3 { left: 17%; bottom: 8%; }
+  body[data-view="onboarding"] .fabric-node.w1 { right: 4%; top: 12%; }
+  body[data-view="onboarding"] .fabric-node.w2 { right: 1%; top: 45%; }
+  body[data-view="onboarding"] .fabric-node.w3 { right: 12%; bottom: 7%; }
+
+  body[data-view="onboarding"] .fabric-router {
+    left: 50%;
+    top: 50%;
+    width: 92px;
+    height: 92px;
+    border: 0;
+    background: #dc351e;
+    color: #fff8eb;
+    box-shadow: 0 0 0 18px rgba(220, 53, 30, .1), 0 0 0 38px rgba(220, 53, 30, .045);
+  }
+
+  body[data-view="onboarding"] .fabric-router > span {
+    color: #fff8eb;
+    font-size: 9px;
+  }
+
+  body[data-view="onboarding"] .fabric-router strong {
+    margin: 4px 0 0;
+    font-size: 11px;
+    line-height: 1.05;
+  }
+
+  body[data-view="onboarding"] .fabric-router small { display: none; }
+
+  body[data-view="onboarding"] .impact-proof {
+    left: 33%;
+    right: 4%;
+    bottom: 24px;
+    border-top-color: rgba(17, 19, 21, .32);
+  }
+
+  body[data-view="onboarding"] .impact-proof > div {
+    padding: 13px 18px 0 0;
+    border-right-color: rgba(17, 19, 21, .22);
+  }
+
+  body[data-view="onboarding"] .impact-proof small {
+    color: #1359aa;
+    font-size: 8px;
+  }
+
+  body[data-view="onboarding"] .impact-proof strong {
+    font-size: 12px;
+  }
+
+  .scroll-mark {
+    position: absolute;
+    left: 44px;
+    bottom: 27px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 900;
+  }
+
+  .scroll-mark i {
+    width: 64px;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  @media (max-width: 1120px) {
+    body[data-view="onboarding"] .impact-copy {
+      width: 51%;
+      padding-left: 54px;
+    }
+    body[data-view="onboarding"] .impact-copy h1 {
+      font-size: clamp(58px, 7vw, 82px);
+    }
+    body[data-view="onboarding"] .hero-fabric {
+      inset: 80px -12% 92px 34%;
+    }
+    body[data-view="onboarding"] .impact-proof {
+      left: 39%;
+      right: 3%;
+    }
+  }
+
+  @media (max-width: 760px) {
+    body[data-view="onboarding"] .topbar {
+      min-height: 112px;
+      padding: 18px 22px 10px;
+    }
+    body[data-view="onboarding"] .brand {
+      width: 100%;
+    }
+    body[data-view="onboarding"] .brand strong {
+      font-size: 42px;
+    }
+    body[data-view="onboarding"] .tabs {
+      width: 100%;
+      justify-content: flex-start;
+      gap: 28px;
+    }
+    body[data-view="onboarding"] .tab-btn {
+      flex: 0 0 auto;
+    }
+    body[data-view="onboarding"] .deck,
+    body[data-view="onboarding"] .page,
+    body[data-view="onboarding"] .onboarding {
+      min-height: 1180px;
+    }
+    body[data-view="onboarding"] .impact-hero {
+      min-height: 1180px;
+      padding: 0;
+    }
+    body[data-view="onboarding"] .impact-copy {
+      width: 100%;
+      max-width: none;
+      padding: 56px 22px 0;
+    }
+    body[data-view="onboarding"] .impact-copy h1 {
+      max-width: 7.4ch;
+      font-size: 58px;
+    }
+    body[data-view="onboarding"] .impact-copy p {
+      max-width: 340px;
+      font-size: 18px;
+    }
+    body[data-view="onboarding"] .impact-cta {
+      width: 100%;
+      max-width: 310px;
+    }
+    body[data-view="onboarding"] .hero-fabric {
+      inset: 500px -150px 250px -85px;
+    }
+    body[data-view="onboarding"] .fabric-node {
+      width: 145px;
+      grid-template-columns: 42px minmax(0, 1fr);
+      column-gap: 7px;
+    }
+    body[data-view="onboarding"] .fabric-node::before {
+      width: 38px;
+      height: 38px;
+    }
+    body[data-view="onboarding"] .fabric-router {
+      width: 78px;
+      height: 78px;
+    }
+    body[data-view="onboarding"] .impact-proof {
+      left: 22px;
+      right: 22px;
+      bottom: 26px;
+      grid-template-columns: 1fr;
+    }
+    body[data-view="onboarding"] .impact-proof > div,
+    body[data-view="onboarding"] .impact-proof > div:not(:first-child) {
+      padding: 11px 0;
+    }
+    .hero-coordinate,
+    .scroll-mark { display: none; }
+    .editorial-grid i:nth-child(1) { left: 34%; }
+    .editorial-grid i:nth-child(2) { left: 68%; }
+    .editorial-grid i:nth-child(3) { display: none; }
+  }
 </style>
 </head>
-<body>
+<body data-view="onboarding">
   <main class="app">
     <header class="topbar">
       <div class="brand">
@@ -1937,8 +2418,8 @@
       </div>
 
       <div class="tabs" aria-label="pages">
-        <button class="tab-btn active" data-page="onboarding">01 Onboarding</button>
-        <button class="tab-btn" data-page="demo">02 Live Case</button>
+        <button class="tab-btn active" data-page="onboarding">Overview</button>
+        <button class="tab-btn" data-page="demo">Live Demo</button>
       </div>
 
     </header>
@@ -1956,11 +2437,14 @@
       <div class="pages" id="pages" data-page="onboarding">
         <section class="page onboarding" aria-label="onboarding">
           <div class="impact-hero">
+            <div class="editorial-grid" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="hero-coordinate coordinate-left" aria-hidden="true">AC—001<br>DISTRIBUTED FABRIC</div>
+            <div class="hero-coordinate coordinate-right" aria-hidden="true">37.5665° N<br>126.9780° E</div>
             <div class="impact-copy">
-              <div class="impact-kicker"><i></i> DISTRIBUTED GPU ORCHESTRATION</div>
-              <h1><span>Air Cloud</span><br>분산 GPU를 하나의 AI Cloud로.</h1>
-              <p>KT Cloud GPU와 지역·엣지 자원을 APN 워커로 연결하면, Agent가 반복 호출하는 추론과 도구 작업을 가장 적합한 노드에 실시간 분산할 수 있습니다.</p>
-              <button class="primary impact-cta" id="startBtn">Live workload 실행하기 <span>→</span></button>
+              <div class="impact-kicker"><i></i> APN DISTRIBUTED GPU ORCHESTRATION</div>
+              <h1>분산 GPU를<br>하나의<br><span>AI CLOUD</span>로.</h1>
+              <p>Agent가 어디서 시작하든, 가장 적합한 KT Cloud·지역·엣지 GPU가 하나의 실행 네트워크처럼 움직입니다.</p>
+              <button class="primary impact-cta" id="startBtn">LIVE CASE 시작하기 <span>→</span></button>
             </div>
 
             <div class="hero-fabric" aria-label="분산 GPU 워커 연결 구조">
@@ -1968,6 +2452,13 @@
                 <defs>
                   <filter id="heroGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 </defs>
+                <g class="fabric-orbits">
+                  <circle cx="430" cy="252" r="82"/>
+                  <circle cx="430" cy="252" r="158"/>
+                  <circle cx="430" cy="252" r="236"/>
+                  <line x1="430" y1="0" x2="430" y2="500"/>
+                  <line x1="0" y1="252" x2="860" y2="252"/>
+                </g>
                 <g class="fabric-links">
                   <path id="heroPath1" d="M84 118 C240 104 278 206 430 246 S650 150 790 112"/>
                   <path id="heroPath2" d="M76 252 C228 252 304 252 430 252 S644 250 794 252"/>
@@ -1995,6 +2486,7 @@
               <div><small>02 / AUTOSCALE</small><strong>요청 증가 즉시 워커 자동 확장</strong></div>
               <div><small>03 / UNIT ECONOMICS</small><strong>고정 피크 대비 사용량 기반 비용</strong></div>
             </div>
+            <div class="scroll-mark" aria-hidden="true"><span>ENTER THE LIVE NETWORK</span><i></i></div>
           </div>
         </section>
 
@@ -2220,6 +2712,7 @@ function setPage(next) {
   const changed = pageName !== next;
   pageName = next;
   els.pages.dataset.page = next;
+  document.body.dataset.view = next;
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.page === next);
   });
