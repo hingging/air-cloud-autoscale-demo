@@ -294,6 +294,7 @@
   .compare-panel h2,
   .brief-panel h2,
   .live-card h2,
+  .network-panel h2,
   .cost-panel h2 {
     margin: 0;
     font-size: 20px;
@@ -1076,10 +1077,8 @@
   }
 
   .node-copy strong {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    display: block;
+    white-space: nowrap;
     font-family: var(--mono);
     font-size: 12px;
   }
@@ -1117,9 +1116,10 @@
   }
 
   .status-badge {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 5px;
+    margin-top: 3px;
     font-family: var(--sans);
     font-size: 10px;
     font-weight: 900;
@@ -1175,8 +1175,10 @@
   .cost-panel {
     min-width: 0;
     display: grid;
-    grid-template-rows: 58px auto auto minmax(0, 1fr);
+    grid-template-rows: 58px auto auto auto auto;
     overflow: hidden;
+    position: sticky;
+    top: 12px;
   }
 
   .cost-body {
@@ -1345,6 +1347,392 @@
     font-weight: 850;
   }
 
+  .kt-impact {
+    margin: 0 18px 18px;
+    padding-top: 2px;
+    display: grid;
+    gap: 0;
+  }
+
+  .kt-impact-head {
+    padding-bottom: 9px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .kt-impact-row {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .kt-impact-row strong {
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .kt-impact-row span {
+    color: var(--ink-2);
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 750;
+  }
+
+  /* High-impact onboarding */
+  .onboarding {
+    display: block;
+    padding: 0;
+  }
+
+  .impact-hero {
+    position: relative;
+    min-height: calc(100vh - 86px);
+    overflow: hidden;
+    padding: clamp(54px, 7vw, 96px) clamp(32px, 5vw, 76px) 138px;
+    background: #f7fbfa;
+    isolation: isolate;
+  }
+
+  .impact-hero::before {
+    content: "AIR CLOUD";
+    position: absolute;
+    left: 44%;
+    top: 1%;
+    z-index: -1;
+    color: rgba(17, 19, 21, .035);
+    font-size: clamp(100px, 15vw, 230px);
+    font-weight: 950;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  .impact-copy {
+    position: relative;
+    z-index: 3;
+    width: min(620px, 46%);
+    padding-top: 14px;
+  }
+
+  .impact-kicker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .impact-kicker i {
+    width: 32px;
+    height: 2px;
+    background: var(--apn);
+  }
+
+  .impact-copy h1 {
+    margin: 24px 0 22px;
+    max-width: 660px;
+    font-size: clamp(44px, 5.4vw, 82px);
+    line-height: 1.02;
+    font-weight: 920;
+    word-break: keep-all;
+  }
+
+  .impact-copy h1 span {
+    color: var(--apn);
+  }
+
+  .impact-copy p {
+    max-width: 590px;
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 18px;
+    line-height: 1.66;
+    font-weight: 650;
+  }
+
+  .impact-cta {
+    width: auto;
+    min-width: 250px;
+    margin-top: 32px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .impact-cta span {
+    font-family: var(--mono);
+    font-size: 21px;
+  }
+
+  .hero-fabric {
+    position: absolute;
+    inset: 42px 22px 108px 42%;
+    z-index: 2;
+  }
+
+  .hero-fabric > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .fabric-links path {
+    fill: none;
+    stroke: rgba(10, 145, 141, .34);
+    stroke-width: 2;
+    stroke-dasharray: 7 10;
+  }
+
+  .fabric-links path:nth-child(2) {
+    stroke: rgba(27, 111, 255, .28);
+  }
+
+  .fabric-packets circle {
+    fill: var(--apn);
+  }
+
+  .fabric-packets circle:nth-child(2) { fill: var(--blue); }
+  .fabric-packets circle:nth-child(3) { fill: var(--red); }
+
+  .fabric-node,
+  .fabric-router {
+    position: absolute;
+    z-index: 3;
+  }
+
+  .fabric-node {
+    width: 150px;
+    min-height: 78px;
+    padding: 13px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 12px 28px rgba(28, 45, 52, .09);
+  }
+
+  .fabric-node small,
+  .fabric-router small {
+    display: block;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 900;
+  }
+
+  .fabric-node strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+  }
+
+  .fabric-node span {
+    display: block;
+    margin-top: 4px;
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 850;
+  }
+
+  .fabric-node.agent { border-left: 3px solid var(--blue); }
+  .fabric-node.worker { border-left: 3px solid var(--apn); }
+  .fabric-node.worker.w3 { border-left-color: var(--amber); }
+  .fabric-node.n1 { left: 1%; top: 12%; }
+  .fabric-node.n2 { left: 0; top: 43%; }
+  .fabric-node.n3 { left: 2%; bottom: 8%; }
+  .fabric-node.w1 { right: 0; top: 10%; }
+  .fabric-node.w2 { right: 0; top: 43%; }
+  .fabric-node.w3 { right: 1%; bottom: 6%; }
+
+  .fabric-router {
+    left: 50%;
+    top: 50%;
+    width: 148px;
+    height: 148px;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-content: center;
+    text-align: center;
+    border: 2px solid rgba(10, 145, 141, .42);
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 12px rgba(10, 145, 141, .07), 0 22px 44px rgba(19, 45, 48, .12);
+  }
+
+  .fabric-router > span {
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .fabric-router strong {
+    margin: 5px 0 7px;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .impact-proof {
+    position: absolute;
+    left: clamp(32px, 5vw, 76px);
+    right: clamp(32px, 5vw, 76px);
+    bottom: 30px;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line-2);
+  }
+
+  .impact-proof > div {
+    padding: 18px 24px 4px 0;
+    border-right: 1px solid var(--line-2);
+  }
+
+  .impact-proof > div:not(:first-child) { padding-left: 24px; }
+  .impact-proof > div:last-child { border-right: 0; }
+
+  .impact-proof small {
+    display: block;
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .impact-proof strong {
+    display: block;
+    margin-top: 7px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  /* Live multi-hop workload routing */
+  .network-lines {
+    z-index: 1;
+  }
+
+  .route-lane {
+    opacity: .08;
+    transition: opacity .25s ease;
+  }
+
+  .route-lane.active {
+    opacity: 1;
+  }
+
+  .route-lane > path {
+    fill: none;
+    stroke: rgba(10, 145, 141, .48);
+    stroke-width: 2.4;
+    stroke-dasharray: 7 11;
+    animation: dash .8s linear infinite;
+  }
+
+  .route-lane:nth-child(even) > path {
+    stroke: rgba(27, 111, 255, .42);
+  }
+
+  .route-lane circle {
+    fill: var(--apn);
+    filter: drop-shadow(0 0 5px rgba(10, 145, 141, .7));
+  }
+
+  .route-lane circle:nth-of-type(2) {
+    fill: var(--blue);
+  }
+
+  .ingress,
+  .scheduler,
+  .load-panel {
+    z-index: 2;
+  }
+
+  .device-card {
+    height: 156px;
+  }
+
+  .pc-body {
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 6px;
+  }
+
+  .agent-lines {
+    gap: 3px;
+  }
+
+  .agent-step {
+    display: grid !important;
+    grid-template-columns: 7px minmax(0, 1fr) auto;
+    gap: 6px;
+    align-items: center;
+    opacity: .48;
+  }
+
+  .agent-step::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .agent-step.running {
+    color: var(--apn);
+    opacity: 1;
+  }
+
+  .agent-step.running::before {
+    background: var(--apn);
+    box-shadow: 0 0 0 3px rgba(10,145,141,.13);
+  }
+
+  .agent-step.done {
+    opacity: .78;
+  }
+
+  .agent-step em {
+    color: currentColor;
+    font-style: normal;
+  }
+
+  .agent-step b {
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  .agent-route {
+    padding-top: 5px;
+    border-top: 1px solid var(--line);
+  }
+
+  .agent-route .route-chain {
+    color: var(--apn);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .node-jobs {
+    color: var(--ink-2) !important;
+    font-family: var(--mono);
+    font-size: 10px !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fabric-packets,
+    .route-lane circle { display: none; }
+    .network-lines path { animation: none; }
+  }
+
   @media (max-width: 1120px) {
     body { padding: 12px; }
     .topbar { flex-wrap: wrap; }
@@ -1371,6 +1759,18 @@
     .node-status {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+    .cost-panel { position: static; }
+    .impact-hero {
+      min-height: 980px;
+      padding-bottom: 150px;
+    }
+    .impact-copy {
+      width: 100%;
+      max-width: 680px;
+    }
+    .hero-fabric {
+      inset: 420px 24px 118px 24px;
+    }
   }
 
   @media (max-width: 760px) {
@@ -1384,6 +1784,24 @@
     .mini-metric:nth-child(2) { border-right: 0; }
     .mini-metric:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
     .network-scene { grid-template-columns: 1fr; }
+    .network-panel { grid-template-rows: auto auto 88px auto; }
+    .cost-panel { grid-template-rows: auto auto auto auto auto; }
+    .panel-head {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      height: auto;
+      min-height: 58px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      align-items: flex-start;
+    }
+    .panel-head h2 { font-size: 16px; }
+    .panel-head small {
+      flex: 0 0 auto;
+      padding-top: 0;
+      white-space: nowrap;
+    }
     .ingress,
     .scheduler,
     .load-panel {
@@ -1394,6 +1812,38 @@
     .node-status {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .device-grid { grid-template-columns: 1fr; }
+    .impact-hero {
+      min-height: 1120px;
+      padding: 44px 22px 250px;
+    }
+    .impact-copy h1 { font-size: 44px; }
+    .impact-copy p { font-size: 16px; }
+    .hero-fabric {
+      inset: 460px 10px 250px;
+    }
+    .fabric-node {
+      width: 112px;
+      min-height: 66px;
+      padding: 10px;
+    }
+    .fabric-router {
+      width: 118px;
+      height: 118px;
+    }
+    .impact-proof {
+      left: 22px;
+      right: 22px;
+      bottom: 26px;
+      grid-template-columns: 1fr;
+    }
+    .impact-proof > div,
+    .impact-proof > div:not(:first-child) {
+      padding: 13px 0;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .impact-proof > div:last-child { border-bottom: 0; }
   }
 </style>
 </head>
@@ -1424,72 +1874,46 @@
 
       <div class="pages" id="pages" data-page="onboarding">
         <section class="page onboarding" aria-label="onboarding">
-          <div class="hero-title">
-            <div class="eyebrow">Air cloud X APN Network</div>
-            <h1 class="headline">완전분산형 저지연 <span>AI Cloud</span> 데모</h1>
-            <div class="subhead">데이터센터 없이도, APN 기반 분산 워커 노드가 사용자 추론 요청을 탄력적으로 처리하는 장면을 보여줍니다.</div>
-          </div>
-
-          <div class="onboarding-body">
-            <div class="compare">
-              <article class="compare-panel">
-                <div class="panel-head">
-                  <h2>Before APN</h2>
-                  <small>centralized peak</small>
-                </div>
-                <div class="mini-topology">
-                  <div class="workload-cloud">
-                    <div class="mini-workload hot" style="left:8%;top:19%">Agent Workload</div>
-                    <div class="mini-workload hot" style="left:13%;top:37%">Agent Workload</div>
-                    <div class="mini-workload hot" style="left:7%;top:57%">Agent Workload</div>
-                    <div class="mini-workload hot" style="right:8%;top:24%">Agent Workload</div>
-                    <div class="mini-workload hot" style="right:13%;top:45%">Agent Workload</div>
-                    <div class="mini-workload hot" style="right:8%;top:65%">Agent Workload</div>
-                  </div>
-                  <div class="center-stack">
-                    <div class="dc">Central<br>GPU Pool</div>
-                    <span class="node-sub">fixed peak capacity</span>
-                  </div>
-                </div>
-                <div class="compare-foot">요청은 중앙 GPU 풀로 몰리고, 피크 기준으로 상시 비용을 잡아야 합니다.</div>
-              </article>
-
-              <article class="compare-panel">
-                <div class="panel-head">
-                  <h2>After APN</h2>
-                  <small>distributed air cloud</small>
-                </div>
-                <div class="mini-topology">
-                  <div class="edge-ring">
-                    <div class="edge-node">APN-01</div>
-                    <div class="edge-node">APN-02</div>
-                    <div class="edge-node">APN-03</div>
-                    <div class="edge-node">APN-04</div>
-                    <div class="edge-node">Router</div>
-                  </div>
-                  <div class="workload-cloud">
-                    <div class="mini-workload" style="left:7%;top:18%">Agent Workload</div>
-                    <div class="mini-workload" style="right:7%;top:20%">Agent Workload</div>
-                    <div class="mini-workload" style="left:10%;bottom:18%">Agent Workload</div>
-                    <div class="mini-workload" style="right:10%;bottom:18%">Agent Workload</div>
-                  </div>
-                </div>
-                <div class="compare-foot">요청은 가까운 분산 워커로 나뉘고, 필요한 순간에만 노드가 늘어납니다.</div>
-              </article>
+          <div class="impact-hero">
+            <div class="impact-copy">
+              <div class="impact-kicker"><i></i> DISTRIBUTED GPU ORCHESTRATION</div>
+              <h1><span>Air Cloud</span><br>분산 GPU를 하나의 AI Cloud로.</h1>
+              <p>KT Cloud GPU와 지역·엣지 자원을 APN 워커로 연결하면, Agent가 반복 호출하는 추론과 도구 작업을 가장 적합한 노드에 실시간 분산할 수 있습니다.</p>
+              <button class="primary impact-cta" id="startBtn">Live workload 실행하기 <span>→</span></button>
             </div>
 
-            <aside class="brief-panel">
-              <div>
-                <h2>What this demo shows</h2>
-                <p class="brief-copy">트래픽이 순차적으로 증가할 때 Air Cloud가 Agent Workload를 APN 워커 노드로 분산하고, AWS 고정 피크 대비 비용 절감이 누적되는 모습을 보여줍니다.</p>
-              </div>
-              <div class="show-list">
-                <div class="show-item"><b>01</b><div><strong>Traffic grows by scenario</strong><span>출시 트래픽, 비전 추론, 배치 작업 상황을 전환해 볼 수 있습니다.</span></div></div>
-                <div class="show-item"><b>02</b><div><strong>Agent workload distribution</strong><span>여러 PC 세션의 Agent traffic이 Air Cloud 워커 노드로 배분됩니다.</span></div></div>
-                <div class="show-item"><b>03</b><div><strong>AWS 대비 비용 절감</strong><span>피크 용량을 고정으로 켜두는 방식과 필요한 워커만 켜는 방식을 비교합니다.</span></div></div>
-              </div>
-              <button class="primary" id="startBtn">Live case 보기</button>
-            </aside>
+            <div class="hero-fabric" aria-label="분산 GPU 워커 연결 구조">
+              <svg viewBox="0 0 860 500" role="img" aria-label="Agent workload가 여러 GPU 워커를 왕복하는 모습">
+                <defs>
+                  <filter id="heroGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <g class="fabric-links">
+                  <path id="heroPath1" d="M84 118 C240 104 278 206 430 246 S650 150 790 112"/>
+                  <path id="heroPath2" d="M76 252 C228 252 304 252 430 252 S644 250 794 252"/>
+                  <path id="heroPath3" d="M84 382 C244 398 298 306 430 258 S652 342 786 392"/>
+                  <path d="M430 252 C520 206 606 138 704 74"/>
+                  <path d="M430 252 C526 300 610 366 706 438"/>
+                </g>
+                <g class="fabric-packets" filter="url(#heroGlow)">
+                  <circle r="5"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.55;1"><mpath href="#heroPath1"/></animateMotion></circle>
+                  <circle r="4"><animateMotion dur="1.8s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.55;1"><mpath href="#heroPath2"/></animateMotion></circle>
+                  <circle r="5"><animateMotion dur="2.1s" begin="-1.2s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.55;1"><mpath href="#heroPath3"/></animateMotion></circle>
+                </g>
+              </svg>
+              <div class="fabric-node agent n1"><small>AGENT 01</small><strong>Code task</strong><span>12 tool calls</span></div>
+              <div class="fabric-node agent n2"><small>AGENT 02</small><strong>Vision task</strong><span>8 model calls</span></div>
+              <div class="fabric-node agent n3"><small>AGENT 03</small><strong>Data task</strong><span>15 tool calls</span></div>
+              <div class="fabric-router"><span>APN</span><strong>Air Cloud<br>Scheduler</strong><small>LIVE ROUTING</small></div>
+              <div class="fabric-node worker w1"><small>KT CLOUD GPU</small><strong>Worker 01</strong><span>72% · ACTIVE</span></div>
+              <div class="fabric-node worker w2"><small>REGIONAL GPU</small><strong>Worker 02</strong><span>68% · ACTIVE</span></div>
+              <div class="fabric-node worker w3"><small>EDGE GPU</small><strong>Worker 03</strong><span>WARMING</span></div>
+            </div>
+
+            <div class="impact-proof" aria-label="핵심 데모 포인트">
+              <div><small>01 / MULTI-HOP</small><strong>한 Agent 작업을 여러 GPU가 연속 처리</strong></div>
+              <div><small>02 / AUTOSCALE</small><strong>요청 증가 즉시 워커 자동 확장</strong></div>
+              <div><small>03 / UNIT ECONOMICS</small><strong>고정 피크 대비 사용량 기반 비용</strong></div>
+            </div>
           </div>
         </section>
 
@@ -1508,10 +1932,13 @@
               </div>
 
               <div class="network-scene">
-                <svg class="network-lines" viewBox="0 0 980 560" preserveAspectRatio="none" aria-hidden="true">
-                  <path class="incoming" d="M460 150 C 555 145, 645 190, 760 252"/>
-                  <path class="distributed" d="M460 282 C 560 282, 652 282, 760 282"/>
-                  <path class="overflow" d="M460 414 C 555 420, 645 370, 760 312"/>
+                <svg class="network-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+                  <g class="route-lane" data-route="0"><path id="route0" d="M360 126 C570 126 654 210 860 292"/><circle r="5"><animateMotion dur="1.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route0"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.7s" begin="-.8s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route0"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="1"><path id="route1" d="M716 126 C780 144 800 220 860 292"/><circle r="5"><animateMotion dur="1.45s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route1"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.45s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route1"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="2"><path id="route2" d="M360 292 C560 292 660 292 860 292"/><circle r="5"><animateMotion dur="1.6s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route2"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.6s" begin="-.8s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route2"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="3"><path id="route3" d="M716 292 C766 292 812 292 860 292"/><circle r="5"><animateMotion dur="1.35s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route3"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.35s" begin="-.65s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route3"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="4"><path id="route4" d="M360 458 C570 458 654 374 860 292"/><circle r="5"><animateMotion dur="1.9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route4"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.9s" begin="-.9s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route4"/></animateMotion></circle></g>
+                  <g class="route-lane" data-route="5"><path id="route5" d="M716 458 C780 440 800 364 860 292"/><circle r="5"><animateMotion dur="1.55s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route5"/></animateMotion></circle><circle r="3.5"><animateMotion dur="1.55s" begin="-.7s" repeatCount="indefinite" keyPoints="0;1;0" keyTimes="0;.56;1"><mpath href="#route5"/></animateMotion></circle></g>
                 </svg>
 
                 <div class="ingress">
@@ -1585,6 +2012,13 @@
                 <div class="ledger-head">aircloud/apn-routing-ledger</div>
                 <div class="ledger-body" id="ledgerBody"></div>
               </div>
+
+              <div class="kt-impact">
+                <div class="kt-impact-head">KT CLOUD IMPACT</div>
+                <div class="kt-impact-row"><strong>GPU POOLING</strong><span>클라우드·지역·엣지 GPU의 유휴 용량을 하나의 실행 풀로 활용</span></div>
+                <div class="kt-impact-row"><strong>TRACEABILITY</strong><span>Agent 작업 단계와 실제 처리 워커를 task 단위로 추적</span></div>
+                <div class="kt-impact-row"><strong>SCALE-IN</strong><span>작업 종료 후 불필요한 GPU 워커를 자동 회수해 상시 비용 축소</span></div>
+              </div>
             </aside>
           </div>
         </section>
@@ -1595,11 +2029,11 @@
 <script>
 const phases = [
   {
-    chip: "출시 트래픽",
-    label: "PHASE 01 / 출시 트래픽",
-    title: "Agent 세션 급증 감지",
+    chip: "Code Agents",
+    label: "PHASE 01 / Code Agents",
+    title: "동시 Agent 세션 분산",
     desc: "동시에 실행되는 PC Agent Workload를 가까운 APN 워커로 분산합니다.",
-    kind: "retail event",
+    kind: "interactive agent",
     policy: "policy: p95 < 280ms",
     from: 180,
     to: 980,
@@ -1608,9 +2042,9 @@ const phases = [
     queueBase: 12
   },
   {
-    chip: "비전 추론",
-    label: "PHASE 02 / 비전 추론",
-    title: "비전 추론 워크로드 분산",
+    chip: "Multimodal",
+    label: "PHASE 02 / Multimodal Agents",
+    title: "멀티모달 도구 호출 분산",
     desc: "Agent가 호출하는 이미지/영상 추론 작업이 GPU 워커 노드로 분산됩니다.",
     kind: "vision infer",
     policy: "policy: GPU util 72%",
@@ -1621,9 +2055,9 @@ const phases = [
     queueBase: 24
   },
   {
-    chip: "배치 작업",
-    label: "PHASE 03 / 배치 작업",
-    title: "배치 작업까지 동시 처리",
+    chip: "Agent Swarm",
+    label: "PHASE 03 / Agent Swarm",
+    title: "다중 Agent 협업 처리",
     desc: "실시간 요청을 유지하면서 문서/에이전트 배치 작업을 남는 워커에 분산합니다.",
     kind: "agent batch",
     policy: "policy: drain queue < 5min",
@@ -1679,6 +2113,8 @@ let currentLoad = 120;
 let trafficLevel = 1;
 let chatMessages = [];
 let nextChatAt = performance.now() + 800;
+let lastVisualRender = 0;
+let lastDeviceStats = { assigned: 2, totalHops: 8 };
 const levelLoads = [140, 280, 520, 820, 1180, 1580];
 
 function clamp(v, min, max) {
@@ -1698,11 +2134,13 @@ function won(v) {
 }
 
 function setPage(next) {
+  const changed = pageName !== next;
   pageName = next;
   els.pages.dataset.page = next;
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.page === next);
   });
+  if (changed) window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function elapsedInfo(now) {
@@ -1733,13 +2171,13 @@ function latencyFor(load, workers, p) {
 }
 
 function distribute(workers) {
-  const a = Math.ceil(workers * .38);
-  const b = Math.ceil(workers * .34);
-  const c = Math.max(1, workers - a - b);
+  const a = Math.min(6, Math.ceil(workers * .38));
+  const b = Math.min(6, Math.ceil((workers - a) * .55));
+  const c = Math.max(0, workers - a - b);
   return [a, b, c];
 }
 
-function renderWorkers(workers) {
+function renderWorkers(workers, load = currentLoad) {
   const dist = distribute(workers);
   const statusCards = [];
   dist.forEach((active, zi) => {
@@ -1748,7 +2186,9 @@ function renderWorkers(workers) {
     for (let i = 1; i <= max; i += 1) {
       const state = i <= active ? "active" : i === active + 1 && active < max ? "warming" : "inactive";
       const id = `w${zi + 1}-${String(i).padStart(2, "0")}`;
-      statusCards.push({ id, zone: zoneName, state, load: state === "active" ? 62 + ((i + zi * 7 + workers) % 24) : state === "warming" ? 18 : 0 });
+      const nodeLoad = state === "active" ? 62 + ((i + zi * 7 + workers) % 24) : state === "warming" ? 18 : 0;
+      const jobs = state === "active" ? Math.max(1, Math.round(load / Math.max(workers, 1) / 34) + ((i + zi) % 3)) : 0;
+      statusCards.push({ id, zone: zoneName, state, load: nodeLoad, jobs });
     }
   });
   els.nodeStatus.innerHTML = statusCards.map((node) => (
@@ -1760,6 +2200,7 @@ function renderWorkers(workers) {
       <div class="node-copy">
         <strong>${node.id}<i class="status-badge">${node.state}</i></strong>
         <span>${node.zone}</span>
+        <span class="node-jobs">${node.state === "active" ? `${node.jobs} tasks · GPU ${node.load}%` : node.state === "warming" ? "GPU boot · model loading" : "0 tasks · power save"}</span>
         <div class="node-meter"><i></i></div>
       </div>
     </div>`
@@ -1767,21 +2208,30 @@ function renderWorkers(workers) {
 }
 
 const sourceDevices = [
-  { name: "PC 01", role: "Codex agent" },
-  { name: "PC 02", role: "Codex agent" },
-  { name: "PC 03", role: "Codex agent" },
-  { name: "PC 04", role: "Codex agent" },
-  { name: "PC 05", role: "Codex agent" },
-  { name: "PC 06", role: "Codex agent" }
+  { name: "PC 01", role: "Code Agent" },
+  { name: "PC 02", role: "Vision Agent" },
+  { name: "PC 03", role: "Research Agent" },
+  { name: "PC 04", role: "Ops Agent" },
+  { name: "PC 05", role: "Data Agent" },
+  { name: "PC 06", role: "Batch Agent" }
 ];
 
 const agentScreens = [
-  ["repo context scan", "tool: read_file()", "stream: patch plan"],
-  ["image task queue", "tool: vision_infer()", "stream: response"],
-  ["code edit request", "tool: apply_patch()", "stream: diff summary"],
-  ["doc QA request", "tool: retrieve_context()", "stream: answer draft"],
-  ["test execution", "tool: run_checks()", "stream: result parse"],
-  ["batch reasoning", "tool: schedule_worker()", "stream: worker sync"]
+  ["retrieve repo context", "plan task graph", "tool: code_search()", "synthesize patch"],
+  ["decode image input", "vision embedding", "tool: detect_objects()", "compose answer"],
+  ["retrieve knowledge", "parallel web search", "rerank evidence", "draft report"],
+  ["inspect service state", "tool: query_metrics()", "reason over traces", "apply action"],
+  ["load data shard", "generate SQL plan", "execute tool chain", "summarize result"],
+  ["split batch tasks", "fan out workers", "merge partial results", "validate output"]
+];
+
+const agentRoutes = [
+  ["w1-01", "w2-02", "w1-03", "w3-01"],
+  ["w2-01", "w1-02", "w2-03", "w1-04"],
+  ["w3-01", "w1-03", "w2-02", "w3-02"],
+  ["w1-04", "w2-01", "w1-02", "w2-04"],
+  ["w2-03", "w3-02", "w1-01", "w2-02"],
+  ["w3-03", "w1-04", "w2-04", "w3-01"]
 ];
 
 function renderDevices(load, phase, local) {
@@ -1791,22 +2241,28 @@ function renderDevices(load, phase, local) {
     return sum + (active ? 1 + ((i + phase) % 3) * .18 : 0);
   }, 0);
   let assigned = 0;
+  let totalHops = 0;
   els.deviceGrid.innerHTML = sourceDevices.map((device, i) => {
     const active = i < activeCount;
     const hot = active && ((i + Math.floor(local * 8)) % 3 === 0);
     const expanded = active && i >= Math.max(0, activeCount - 2);
     const weight = active ? 1 + ((i + phase) % 3) * .18 : 0;
     const events = active ? Math.max(28, Math.round(load * weight / Math.max(totalShare, 1))) : 0;
-    const workloads = active ? clamp(Math.round(events / 58), 1, 18) : 0;
-    const hops = active ? clamp(Math.round(workloads * (2.4 + phase * .55) + ((i + Math.floor(local * 10)) % 4)), 2, 64) : 0;
+    const workloads = active ? clamp(Math.round(events / 46), 2, 28) : 0;
+    const hops = active ? clamp(Math.round(workloads * (3.8 + phase * .8) + ((i + Math.floor(local * 16)) % 7)), 6, 128) : 0;
     const pct = active ? clamp(Math.round((events / Math.max(load, 1)) * 180), 18, 100) : 0;
-    const nodePrefix = i % 3 === 0 ? "w1" : i % 3 === 1 ? "w2" : "w3";
-    const nodeId = `${nodePrefix}-${String(((Math.floor(local * 12) + i + phase) % 4) + 1).padStart(2, "0")}`;
+    const stepIndex = (Math.floor(performance.now() / 720) + i + phase) % agentScreens[i].length;
+    const routeOffset = (Math.floor(performance.now() / 1050) + phase + i) % agentRoutes[i].length;
+    const route = agentRoutes[i].slice(routeOffset).concat(agentRoutes[i].slice(0, routeOffset)).slice(0, 3);
     const lines = agentScreens[i].map((line, li) => {
-      const suffix = li === 0 ? `#${String(workloads + i + phase).padStart(2, "0")}` : li === 1 ? `-> ${nodeId}` : `${hops} hops`;
-      return `<span>${active ? line : "standby"} ${active ? suffix : ""}</span>`;
+      const state = !active ? "" : li < stepIndex ? "done" : li === stepIndex ? "running" : "";
+      const status = !active ? "IDLE" : li < stepIndex ? "DONE" : li === stepIndex ? `GPU ${route[li % route.length]}` : "WAIT";
+      return `<span class="agent-step ${state}"><em>${active ? line : "standby"}</em><b>${status}</b></span>`;
     }).join("");
-    if (active) assigned += workloads;
+    if (active) {
+      assigned += workloads;
+      totalHops += hops;
+    }
     return `<div class="device-card ${!active ? "idle" : hot ? "hot" : "active"} ${expanded ? "expanded" : ""}" style="--device-load:${pct}%">
       <div class="pc-titlebar">
         <span class="pc-dots"><i></i><i></i><i></i></span>
@@ -1814,14 +2270,17 @@ function renderDevices(load, phase, local) {
         <span class="pc-state">${active ? "agent on" : "sleep"}</span>
       </div>
       <div class="pc-body">
-        <div class="agent-prompt"><i></i><span>${active ? `${device.role} running` : "agent idle"}</span></div>
+        <div class="agent-prompt"><i></i><span>${active ? `${device.role} · task #${String(workloads * 7 + i + phase).padStart(3, "0")}` : "agent idle"}</span></div>
         <div class="agent-lines">${lines}</div>
-        <div class="agent-route"><span>${active ? `${workloads} workloads` : "no workload"}</span><span>${active ? `GPU ${nodeId}` : "standby"}</span></div>
+        <div class="agent-route"><span class="route-chain">${active ? route.join(" → ") : "no route"}</span><span>${active ? `↔ ${hops} hops` : "standby"}</span></div>
         <div class="device-load"><i></i></div>
       </div>
     </div>`;
   }).join("");
-  els.deviceTotal.textContent = `${activeCount} active agents · ${assigned.toLocaleString("ko-KR")} workloads`;
+  document.querySelectorAll(".route-lane").forEach((lane, i) => lane.classList.toggle("active", i < activeCount));
+  const agentLabel = activeCount === 1 ? "agent" : "agents";
+  els.deviceTotal.textContent = `${activeCount} ${agentLabel} · ${assigned.toLocaleString("ko-KR")} tasks · ${totalHops.toLocaleString("ko-KR")} GPU hops`;
+  return { assigned, totalHops };
 }
 
 const workloadTypes = [
@@ -1890,6 +2349,8 @@ function reset() {
   trafficLevel = 1;
   chatMessages = [];
   nextChatAt = performance.now() + 800;
+  lastVisualRender = 0;
+  lastDeviceStats = { assigned: 2, totalHops: 8 };
   log("ok", "demo initialized, waiting for traffic");
   pushChat("workload", "Context retrieval ⇄ w1-01", "PC 01", "READY");
 }
@@ -1942,9 +2403,18 @@ function update(now) {
       btn.classList.toggle("active", Number(btn.dataset.phase) === info.phase);
     });
 
-    els.schedulerState.textContent = info.local < .38 ? "routing" : info.local < .72 ? `scale to ${workers}` : "balancing";
     maybeEmitChat(now, load, workers, info.phase);
-    renderDevices(load, info.phase, info.local);
+    if (now - lastVisualRender >= 240) {
+      lastDeviceStats = renderDevices(load, info.phase, info.local);
+      renderWorkers(workers, load);
+      lastVisualRender = now;
+    }
+    const deviceStats = lastDeviceStats;
+    els.schedulerState.textContent = info.local < .38
+      ? `${deviceStats.totalHops} GPU hops routing`
+      : info.local < .72
+        ? `${deviceStats.assigned} tasks → ${workers} workers`
+        : "multi-hop balancing";
     els.rps.textContent = load.toLocaleString("ko-KR");
     els.loadBar.style.width = `${clamp(load / phases[2].to * 100, 6, 100)}%`;
     els.workers.textContent = workers;
@@ -1956,8 +2426,6 @@ function update(now) {
     els.airBar.style.width = `${airRatio}%`;
     els.awsCost.textContent = won(awsCost);
     els.airCost.textContent = won(airCost);
-    renderWorkers(workers);
-
     if (util > 84 && info.local > .45) {
       els.schedulerState.textContent = "adding workers";
     }
@@ -2005,7 +2473,7 @@ els.startBtn.addEventListener("click", () => {
 });
 
 reset();
-renderWorkers(5);
+renderWorkers(5, 180);
 renderDevices(180, 0, 0);
 renderTimeline(0);
 requestAnimationFrame(update);
