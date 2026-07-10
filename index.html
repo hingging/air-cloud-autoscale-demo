@@ -2407,6 +2407,402 @@
     .editorial-grid i:nth-child(2) { left: 68%; }
     .editorial-grid i:nth-child(3) { display: none; }
   }
+
+  /* Minimal product landing */
+  body[data-view="onboarding"] {
+    background: #f5f5f7;
+  }
+
+  body[data-view="onboarding"] .topbar {
+    min-height: 52px;
+    padding: 0 clamp(20px, 4vw, 64px);
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, .08);
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(18px);
+  }
+
+  body[data-view="onboarding"] .brand {
+    align-items: center;
+    gap: 10px;
+  }
+
+  body[data-view="onboarding"] .brand strong {
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1;
+    font-weight: 750;
+    text-transform: none;
+  }
+
+  body[data-view="onboarding"] .brand span {
+    padding: 0;
+    color: #6e6e73;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  body[data-view="onboarding"] .tabs {
+    align-items: center;
+    gap: 26px;
+  }
+
+  body[data-view="onboarding"] .tab-btn {
+    height: 52px;
+    border: 0;
+    background: transparent;
+    color: #515154;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  body[data-view="onboarding"] .tab-btn.active {
+    border: 0;
+    background: transparent;
+    color: #111315;
+  }
+
+  body[data-view="onboarding"] .deck,
+  body[data-view="onboarding"] .page,
+  body[data-view="onboarding"] .onboarding {
+    min-height: calc(100svh - 52px);
+    background: #f5f5f7;
+  }
+
+  body[data-view="onboarding"] .impact-hero {
+    min-height: calc(100svh - 52px);
+    padding: 0;
+    background: #f5f5f7;
+  }
+
+  .editorial-grid,
+  .hero-coordinate,
+  .scroll-mark {
+    display: none;
+  }
+
+  body[data-view="onboarding"] .impact-copy {
+    position: relative;
+    z-index: 6;
+    width: 100%;
+    max-width: none;
+    padding: clamp(54px, 8vh, 82px) 20px 0;
+    text-align: center;
+  }
+
+  body[data-view="onboarding"] .impact-kicker {
+    display: block;
+    color: #6e6e73;
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 650;
+  }
+
+  body[data-view="onboarding"] .impact-kicker i {
+    display: none;
+  }
+
+  body[data-view="onboarding"] .impact-copy h1 {
+    max-width: none;
+    margin: 10px auto 18px;
+    color: #1d1d1f;
+    font-family: var(--sans);
+    font-size: clamp(50px, 5.2vw, 78px);
+    line-height: 1.04;
+    font-weight: 760;
+    text-transform: none;
+  }
+
+  body[data-view="onboarding"] .impact-copy h1 span {
+    color: #1d1d1f;
+  }
+
+  body[data-view="onboarding"] .impact-copy p {
+    max-width: 620px;
+    margin: 0 auto;
+    color: #6e6e73;
+    font-family: var(--sans);
+    font-size: clamp(18px, 1.55vw, 22px);
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  body[data-view="onboarding"] .impact-cta {
+    width: auto;
+    min-width: 154px;
+    height: 44px;
+    margin-top: 24px;
+    padding: 0 19px;
+    border-radius: 24px;
+    background: #0071e3;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 650;
+    text-transform: none;
+  }
+
+  body[data-view="onboarding"] .impact-cta span {
+    font-size: 16px;
+  }
+
+  body[data-view="onboarding"] .impact-cta:hover {
+    background: #0077ed;
+  }
+
+  body[data-view="onboarding"] .hero-fabric {
+    inset: clamp(255px, 34vh, 315px) 11% 72px;
+    z-index: 2;
+    border: 0;
+    background: transparent;
+  }
+
+  body[data-view="onboarding"] .fabric-orbits circle,
+  body[data-view="onboarding"] .fabric-orbits line {
+    stroke: rgba(0, 0, 0, .1);
+    stroke-width: 1;
+  }
+
+  body[data-view="onboarding"] .fabric-orbits circle:nth-child(2) {
+    stroke: rgba(0, 113, 227, .18);
+  }
+
+  body[data-view="onboarding"] .fabric-orbits circle:nth-child(3) {
+    stroke: rgba(0, 0, 0, .1);
+    stroke-dasharray: 5 8;
+  }
+
+  body[data-view="onboarding"] .fabric-links path {
+    stroke: rgba(0, 113, 227, .32);
+    stroke-width: 1.5;
+  }
+
+  body[data-view="onboarding"] .fabric-links path:nth-child(even) {
+    stroke: rgba(10, 145, 141, .38);
+  }
+
+  body[data-view="onboarding"] .fabric-packets circle {
+    fill: #0071e3;
+  }
+
+  body[data-view="onboarding"] .fabric-packets circle:nth-child(2) {
+    fill: #0a918d;
+  }
+
+  body[data-view="onboarding"] .fabric-node {
+    width: 122px;
+    min-height: 78px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 46px auto auto auto;
+    justify-items: center;
+    align-content: start;
+    gap: 2px;
+    padding: 0;
+    text-align: center;
+  }
+
+  body[data-view="onboarding"] .fabric-node::before {
+    grid-column: 1;
+    grid-row: 1;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: #1d1d1f;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, .12);
+    font-size: 8px;
+  }
+
+  body[data-view="onboarding"] .fabric-node.worker::before {
+    background: #1d1d1f;
+    color: #fff;
+  }
+
+  body[data-view="onboarding"] .fabric-node small,
+  body[data-view="onboarding"] .fabric-node strong,
+  body[data-view="onboarding"] .fabric-node span {
+    grid-column: 1;
+  }
+
+  body[data-view="onboarding"] .fabric-node small {
+    grid-row: 2;
+    color: #86868b;
+    font-family: var(--sans);
+    font-size: 8px;
+    font-weight: 650;
+  }
+
+  body[data-view="onboarding"] .fabric-node strong {
+    grid-row: 3;
+    margin: 0;
+    color: #1d1d1f;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  body[data-view="onboarding"] .fabric-node span {
+    grid-row: 4;
+    margin: 0;
+    color: #0a918d;
+    font-size: 8px;
+  }
+
+  body[data-view="onboarding"] .fabric-node.n1 { left: 10%; top: 8%; }
+  body[data-view="onboarding"] .fabric-node.n2 { left: 1%; top: 43%; }
+  body[data-view="onboarding"] .fabric-node.n3 { left: 12%; bottom: 3%; }
+  body[data-view="onboarding"] .fabric-node.w1 { right: 9%; top: 8%; }
+  body[data-view="onboarding"] .fabric-node.w2 { right: 0; top: 43%; }
+  body[data-view="onboarding"] .fabric-node.w3 { right: 11%; bottom: 3%; }
+
+  body[data-view="onboarding"] .fabric-router {
+    width: 112px;
+    height: 112px;
+    border: 0;
+    background: #1d1d1f;
+    color: #fff;
+    box-shadow: 0 0 0 18px rgba(0, 0, 0, .04), 0 26px 54px rgba(0, 0, 0, .18);
+  }
+
+  body[data-view="onboarding"] .fabric-router > span {
+    color: #5ac8fa;
+    font-family: var(--sans);
+    font-size: 9px;
+  }
+
+  body[data-view="onboarding"] .fabric-router strong {
+    margin: 5px 0 0;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.08;
+  }
+
+  body[data-view="onboarding"] .impact-proof {
+    left: 14%;
+    right: 14%;
+    bottom: 13px;
+    border-top: 0;
+  }
+
+  body[data-view="onboarding"] .impact-proof > div,
+  body[data-view="onboarding"] .impact-proof > div:not(:first-child) {
+    padding: 0 18px;
+    border-right: 1px solid rgba(0, 0, 0, .1);
+    text-align: center;
+  }
+
+  body[data-view="onboarding"] .impact-proof > div:last-child {
+    border-right: 0;
+  }
+
+  body[data-view="onboarding"] .impact-proof small {
+    color: #86868b;
+    font-family: var(--sans);
+    font-size: 9px;
+    font-weight: 650;
+  }
+
+  body[data-view="onboarding"] .impact-proof strong {
+    margin-top: 4px;
+    color: #1d1d1f;
+    font-size: 11px;
+    font-weight: 650;
+  }
+
+  @media (max-width: 1120px) {
+    body[data-view="onboarding"] .impact-copy {
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    body[data-view="onboarding"] .hero-fabric {
+      inset: 285px 3% 80px;
+    }
+    body[data-view="onboarding"] .impact-proof {
+      left: 5%;
+      right: 5%;
+    }
+  }
+
+  @media (max-width: 760px) {
+    body[data-view="onboarding"] .topbar {
+      min-height: 88px;
+      padding: 12px 20px 0;
+    }
+    body[data-view="onboarding"] .brand {
+      width: 100%;
+    }
+    body[data-view="onboarding"] .brand strong {
+      font-size: 19px;
+    }
+    body[data-view="onboarding"] .tabs {
+      height: 38px;
+      gap: 24px;
+    }
+    body[data-view="onboarding"] .tab-btn {
+      height: 38px;
+    }
+    body[data-view="onboarding"] .deck,
+    body[data-view="onboarding"] .page,
+    body[data-view="onboarding"] .onboarding,
+    body[data-view="onboarding"] .impact-hero {
+      min-height: 1040px;
+    }
+    body[data-view="onboarding"] .impact-copy {
+      padding: 54px 20px 0;
+    }
+    body[data-view="onboarding"] .impact-kicker {
+      font-size: 15px;
+    }
+    body[data-view="onboarding"] .impact-copy h1 {
+      max-width: none;
+      font-size: 42px;
+      line-height: 1.08;
+    }
+    body[data-view="onboarding"] .impact-copy p {
+      max-width: 330px;
+      font-size: 17px;
+    }
+    body[data-view="onboarding"] .impact-cta {
+      width: auto;
+      max-width: none;
+    }
+    body[data-view="onboarding"] .hero-fabric {
+      inset: 330px -105px 250px;
+    }
+    body[data-view="onboarding"] .fabric-node {
+      width: 96px;
+      grid-template-columns: 1fr;
+      grid-template-rows: 40px auto auto auto;
+    }
+    body[data-view="onboarding"] .fabric-node::before {
+      width: 36px;
+      height: 36px;
+    }
+    body[data-view="onboarding"] .fabric-router {
+      width: 86px;
+      height: 86px;
+    }
+    body[data-view="onboarding"] .impact-proof {
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      grid-template-columns: 1fr;
+    }
+    body[data-view="onboarding"] .impact-proof > div,
+    body[data-view="onboarding"] .impact-proof > div:not(:first-child) {
+      padding: 11px 0;
+      border-right: 0;
+      border-bottom: 1px solid rgba(0, 0, 0, .08);
+    }
+    body[data-view="onboarding"] .impact-proof > div:last-child {
+      border-bottom: 0;
+    }
+  }
 </style>
 </head>
 <body data-view="onboarding">
@@ -2441,10 +2837,10 @@
             <div class="hero-coordinate coordinate-left" aria-hidden="true">AC—001<br>DISTRIBUTED FABRIC</div>
             <div class="hero-coordinate coordinate-right" aria-hidden="true">37.5665° N<br>126.9780° E</div>
             <div class="impact-copy">
-              <div class="impact-kicker"><i></i> APN DISTRIBUTED GPU ORCHESTRATION</div>
-              <h1>분산 GPU를<br>하나의<br><span>AI CLOUD</span>로.</h1>
-              <p>Agent가 어디서 시작하든, 가장 적합한 KT Cloud·지역·엣지 GPU가 하나의 실행 네트워크처럼 움직입니다.</p>
-              <button class="primary impact-cta" id="startBtn">LIVE CASE 시작하기 <span>→</span></button>
+              <div class="impact-kicker">Air Cloud + APN</div>
+              <h1><span>Air Cloud</span><br>분산 GPU, 하나처럼.</h1>
+              <p>Agent 워크로드를 가장 적합한 GPU로 연결하고, 필요한 순간에만 확장합니다.</p>
+              <button class="primary impact-cta" id="startBtn">Live Demo 보기 <span>→</span></button>
             </div>
 
             <div class="hero-fabric" aria-label="분산 GPU 워커 연결 구조">
