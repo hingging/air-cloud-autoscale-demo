@@ -604,7 +604,10 @@
   .device-panel {
     width: 100%;
     min-height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     padding: 16px;
+    overflow: hidden;
     border: 1px solid rgba(27, 111, 255, .18);
     border-radius: 8px;
     background: rgba(255, 255, 255, .82);
@@ -627,6 +630,27 @@
     font-size: 16px;
     font-weight: 900;
     white-space: nowrap;
+  }
+
+  .monitor-mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding-left: 8px;
+    border-left: 1px solid var(--line);
+    color: var(--apn);
+    font-family: var(--mono);
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 900;
+  }
+
+  .monitor-mode i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--apn);
+    box-shadow: 0 0 0 4px rgba(10, 145, 141, .12);
   }
 
   .device-title svg {
@@ -756,8 +780,11 @@
   }
 
   .device-grid {
+    min-height: 0;
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
     gap: 10px;
   }
 
@@ -804,8 +831,8 @@
     gap: 7px;
     align-items: center;
     padding: 0 9px;
-    border-bottom: 1px solid var(--line);
-    background: #f4f7f9;
+    border-bottom: 1px solid #26343b;
+    background: #131c21;
   }
 
   .pc-dots {
@@ -840,13 +867,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--ink);
+    color: #f5f8fa;
     font-size: 12px;
     font-weight: 900;
   }
 
   .pc-state {
-    color: currentColor;
+    color: #79d9d3;
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 900;
@@ -856,7 +883,7 @@
   .pc-body {
     min-height: 0;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
     gap: 7px;
     padding: 10px;
     background:
@@ -899,6 +926,88 @@
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 850;
+  }
+
+  .agent-runtime {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 118px;
+    gap: 10px;
+  }
+
+  .agent-telemetry {
+    min-width: 0;
+    margin: 0;
+    display: grid;
+    align-content: start;
+    border-left: 1px solid var(--line);
+  }
+
+  .agent-telemetry div {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+    padding: 4px 0 4px 9px;
+    border-bottom: 1px solid rgba(205, 214, 222, .65);
+  }
+
+  .agent-telemetry dt,
+  .agent-telemetry dd {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--mono);
+  }
+
+  .agent-telemetry dt {
+    color: var(--muted);
+    font-size: 8px;
+    font-weight: 900;
+  }
+
+  .agent-telemetry dd {
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .agent-console {
+    min-width: 0;
+    height: 28px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 7px;
+    align-items: center;
+    padding: 0 8px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #11191e;
+    color: #c8d2d7;
+    font-family: var(--mono);
+    font-size: 9px;
+  }
+
+  .agent-console > span {
+    color: #65d2ca;
+    font-weight: 900;
+  }
+
+  .agent-console code {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    font-family: inherit;
+  }
+
+  .agent-console b {
+    color: #65d2ca;
+    font-size: 8px;
   }
 
   .agent-lines span {
@@ -1768,7 +1877,7 @@
   }
 
   .pc-body {
-    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto minmax(0, 1fr) auto auto auto;
     gap: 6px;
   }
 
@@ -3214,6 +3323,8 @@
     }
 
     body[data-view="demo"] .device-panel {
+      min-height: 0;
+      height: 100%;
       padding: 10px;
     }
 
@@ -3226,12 +3337,16 @@
     }
 
     body[data-view="demo"] .device-grid {
+      min-height: 0;
+      height: 100%;
       grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
       gap: 7px;
     }
 
     body[data-view="demo"] .device-card {
-      height: 108px;
+      min-height: 0;
+      height: auto;
     }
 
     body[data-view="demo"] .pc-titlebar {
@@ -3250,6 +3365,21 @@
     body[data-view="demo"] .agent-lines {
       gap: 1px;
       font-size: 9px;
+    }
+
+    body[data-view="demo"] .agent-runtime {
+      grid-template-columns: minmax(0, 1fr) 102px;
+      gap: 7px;
+    }
+
+    body[data-view="demo"] .agent-telemetry div {
+      grid-template-columns: 29px minmax(0, 1fr);
+      padding: 3px 0 3px 7px;
+    }
+
+    body[data-view="demo"] .agent-console {
+      height: 24px;
+      font-size: 8px;
     }
 
     body[data-view="demo"] .agent-step {
@@ -3422,7 +3552,7 @@
     }
 
     body[data-view="demo"] .device-card {
-      height: 80px;
+      height: auto;
       grid-template-rows: 21px minmax(0, 1fr);
     }
 
@@ -3440,6 +3570,19 @@
     }
 
     body[data-view="demo"] .agent-step:nth-child(n+4) {
+      display: none;
+    }
+
+    body[data-view="demo"] .agent-runtime {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    body[data-view="demo"] .agent-telemetry,
+    body[data-view="demo"] .agent-console {
+      display: none;
+    }
+
+    body[data-view="demo"] .monitor-mode {
       display: none;
     }
 
@@ -3484,7 +3627,7 @@
     }
 
     body[data-view="demo"] .device-card {
-      height: 124px;
+      height: auto;
     }
 
     body[data-view="demo"] .agent-prompt {
@@ -3501,6 +3644,19 @@
 
     body[data-view="demo"] .agent-route {
       font-size: 10px;
+    }
+
+    body[data-view="demo"] .agent-console {
+      height: 30px;
+      font-size: 10px;
+    }
+
+    body[data-view="demo"] .agent-telemetry dt {
+      font-size: 9px;
+    }
+
+    body[data-view="demo"] .agent-telemetry dd {
+      font-size: 11px;
     }
 
     body[data-view="demo"] .node-status {
@@ -3661,7 +3817,7 @@
                 <div class="ingress">
                   <div class="device-panel">
                     <div class="device-panel-head">
-                      <span class="device-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Live Agent Screens</span>
+                      <span class="device-title"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Agent Execution Control <em class="monitor-mode"><i></i>KT APN NOC</em></span>
                       <div class="agent-toolbar">
                         <b id="deviceTotal">0 active</b>
                         <button class="demo-start-btn" id="demoStartBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z"/></svg><span id="demoStartLabel">Start</span></button>
@@ -3974,6 +4130,15 @@ const agentScreens = [
   ["split batch tasks", "fan out workers", "merge partial results", "validate output"]
 ];
 
+const agentConsoleLines = [
+  ["indexing repository symbols", "dispatch code_search tool", "validating patch dependencies", "streaming code response"],
+  ["loading visual embeddings", "dispatch detect_objects tool", "merging vision features", "streaming visual answer"],
+  ["querying enterprise knowledge", "reranking source evidence", "building cited context", "streaming research brief"],
+  ["reading service telemetry", "correlating distributed traces", "applying remediation plan", "watching health signals"],
+  ["scanning partition metadata", "executing distributed query", "validating result rows", "streaming data summary"],
+  ["splitting workload batches", "dispatching parallel workers", "merging partial outputs", "verifying batch result"]
+];
+
 const agentRoutes = [
   ["w1-01", "w2-02", "w1-03", "w3-01"],
   ["w2-01", "w1-02", "w2-03", "w1-04"],
@@ -4040,6 +4205,10 @@ function renderDevices(load, phase, local) {
     const stepIndex = (Math.floor(performance.now() / 720) + i + phase) % agentScreens[i].length;
     const routeOffset = (Math.floor(performance.now() / 1050) + phase + i) % agentRoutes[i].length;
     const route = agentRoutes[i].slice(routeOffset).concat(agentRoutes[i].slice(0, routeOffset)).slice(0, 3);
+    const gpuNode = active ? route[stepIndex % route.length] : "--";
+    const rtt = active ? 82 + ((i * 17 + workloads * 5 + stepIndex * 9) % 91) : 0;
+    const tps = active ? 24 + ((i * 13 + events + stepIndex * 7) % 54) : 0;
+    const consoleText = active ? agentConsoleLines[i][stepIndex] : "awaiting agent workload";
     const lines = agentScreens[i].map((line, li) => {
       const state = !active ? "" : li < stepIndex ? "done" : li === stepIndex ? "running" : "";
       const status = !active ? "IDLE" : li < stepIndex ? "DONE" : li === stepIndex ? `GPU ${route[li % route.length]}` : "WAIT";
@@ -4053,11 +4222,19 @@ function renderDevices(load, phase, local) {
       <div class="pc-titlebar">
         <span class="pc-dots"><i></i><i></i><i></i></span>
         <span class="pc-title">${device.name}</span>
-        <span class="pc-state">${active ? "agent on" : "sleep"}</span>
+        <span class="pc-state">${active ? "live" : "sleep"}</span>
       </div>
       <div class="pc-body">
         <div class="agent-prompt"><i></i><span>${active ? `${device.role} · task #${String(workloads * 7 + i + phase).padStart(3, "0")}` : "agent idle"}</span></div>
-        <div class="agent-lines">${lines}</div>
+        <div class="agent-runtime">
+          <div class="agent-lines">${lines}</div>
+          <dl class="agent-telemetry">
+            <div><dt>GPU</dt><dd>${gpuNode}</dd></div>
+            <div><dt>RTT</dt><dd>${active ? `${rtt}ms` : "--"}</dd></div>
+            <div><dt>TPS</dt><dd>${active ? tps : "--"}</dd></div>
+          </dl>
+        </div>
+        <div class="agent-console"><span>›</span><code>${consoleText}</code><b>${active ? "STREAM" : "IDLE"}</b></div>
         <div class="agent-route"><span class="route-chain">${active ? route.join(" → ") : "no route"}</span><span>${active ? `↔ ${hops} hops` : "standby"}</span></div>
         <div class="device-load"><i></i></div>
       </div>
